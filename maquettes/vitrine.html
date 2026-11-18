@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette A, Vitrine interactive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #FFFFFF; --ink: #16181D; --ink-2: #565B66; --line: rgba(22,24,29,.1);
+  --display: "Archivo", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --pad: clamp(16px, 4vw, 56px); --wrap: 1240px;
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1rem/1.55 var(--display); font-stretch: 100%; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+button { font: inherit; }
+:focus-visible { outline: 3px solid #2860C8; outline-offset: 3px; }
+.wrap { max-width: calc(var(--wrap) + 2 * var(--pad)); margin: 0 auto; padding-inline: var(--pad); }
+
+/* Barre du haut */
+.bar { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; align-items: center; gap: 2rem; height: 60px; }
+.bar__name { font-weight: 600; font-stretch: 112%; text-decoration: none; margin-right: auto; }
+.bar nav { display: flex; gap: 1.5rem; }
+.bar nav a { text-decoration: none; color: var(--ink-2); font-size: .95rem; }
+.bar nav a:hover { color: var(--ink); }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 5vw, 80px); align-items: center; min-height: calc(100vh - 60px); padding-block: 48px; }
+.hero h1 { margin: 0; font-size: clamp(3rem, 7.4vw, 6.4rem); font-weight: 600; font-stretch: 125%; line-height: 1; letter-spacing: -0.02em; }
+.hero p { max-width: 30rem; margin: 1.5rem 0 0; font-size: 1.2rem; color: var(--ink-2); }
+.hero p strong { color: var(--ink); font-weight: 600; }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.btn { display: inline-flex; align-items: center; min-height: 48px; padding: 0 1.3rem; border-radius: 10px; border: 1px solid var(--ink); background: none; color: var(--ink); font-weight: 500; text-decoration: none; cursor: pointer; transition: background-color 150ms ease-out; }
+.btn:hover { background: rgba(22,24,29,.06); }
+.btn--solid { background: var(--ink); color: #fff; }
+.btn--solid:hover { background: #2E323B; }
+
+/* Éventail de captures */
+.fan { position: relative; aspect-ratio: 5 / 4; perspective: 1400px; }
+.fan a { position: absolute; inset: 12% 8% auto 8%; transform-origin: 50% 120%; transition: transform 300ms ease-out; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 2px 6px rgba(0,0,0,.06), 0 18px 40px rgba(0,0,0,.07); background: #fff; }
+.fan a img { aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; width: 100%; }
+.fan a span { position: absolute; left: 12px; bottom: 12px; padding: 4px 10px; border-radius: 6px; background: rgba(22,24,29,.88); color: #fff; font-size: .875rem; font-weight: 500; opacity: 0; transition: opacity 150ms ease-out; }
+.fan a:nth-child(1) { transform: rotate(-9deg) translate(-14%, 4%); }
+.fan a:nth-child(2) { transform: rotate(-3deg) translate(-4%, 0); }
+.fan a:nth-child(3) { transform: rotate(3deg) translate(5%, 2%); }
+.fan a:nth-child(4) { transform: rotate(9deg) translate(15%, 6%); }
+.fan:hover a:nth-child(1) { transform: rotate(-14deg) translate(-26%, 6%); }
+.fan:hover a:nth-child(2) { transform: rotate(-5deg) translate(-9%, -2%); }
+.fan:hover a:nth-child(3) { transform: rotate(5deg) translate(10%, 0); }
+.fan:hover a:nth-child(4) { transform: rotate(14deg) translate(27%, 8%); }
+.fan a:hover, .fan a:focus-visible { transform: rotate(0) translate(0, -6%) scale(1.04) !important; z-index: 5; }
+.fan a:hover span, .fan a:focus-visible span { opacity: 1; }
+
+/* Scènes de projet : chaque projet garde les couleurs de sa propre application */
+.scene { padding-block: clamp(72px, 10vw, 140px); background: var(--s-bg); color: var(--s-ink); }
+.scene__grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
+.scene__kind { margin: 0; font-size: .95rem; color: var(--s-ink-2); }
+.scene h2 { margin: .5rem 0 0; font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 600; font-stretch: 118%; line-height: 1.05; letter-spacing: -0.015em; }
+.scene__lead { margin: 1.25rem 0 0; font-size: 1.2rem; line-height: 1.5; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 2rem 0 0; padding: 1.25rem 0 0; border-top: 1px solid var(--s-line); }
+.facts dt { font-size: .875rem; color: var(--s-ink-2); }
+.facts dd { margin: .2rem 0 0; font-weight: 600; }
+.stack { margin: 1.5rem 0 0; font-size: .95rem; color: var(--s-ink-2); }
+
+.demo { background: var(--s-card); border: 1px solid var(--s-line); border-radius: 14px; padding: clamp(16px, 2.5vw, 28px); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.demo__title { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 0 0 1rem; font-size: 1rem; font-weight: 600; }
+.demo__title small { font-weight: 400; color: var(--s-ink-2); font-size: .875rem; }
+
+/* Échecs */
+.chess { --s-bg: #2A2119; --s-ink: #F4EADC; --s-ink-2: #C8B8A2; --s-line: rgba(244,234,220,.14); --s-card: #342A20; }
+.chess__play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.board { display: grid; grid-template-columns: repeat(8, 1fr); aspect-ratio: 1; border-radius: 6px; overflow: hidden; border: 1px solid var(--s-line); user-select: none; }
+.board button { all: unset; display: grid; place-items: center; aspect-ratio: 1; font-size: clamp(1rem, 2.6vw, 1.9rem); line-height: 1; cursor: pointer; background: #F0D9B5; color: #1B1B1B; }
+.board button.d { background: #B58863; }
+.board img { width: 82%; height: 82%; object-fit: contain; pointer-events: none; }
+.board button.sel { box-shadow: inset 0 0 0 3px #4C9EFF; }
+.board button:focus-visible { box-shadow: inset 0 0 0 3px #4C9EFF; }
+.wire { font: 400 .8rem/1.5 var(--mono); }
+.wire p { margin: 0 0 .25rem; color: var(--s-ink-2); font-family: var(--display); font-size: .875rem; }
+.wire pre { margin: 0 0 1rem; padding: .75rem; border-radius: 8px; background: #1F1812; border: 1px solid var(--s-line); white-space: pre-wrap; word-break: break-all; min-height: 3.5em; color: #F4EADC; }
+.wire pre.cipher { color: #E8C07D; }
+.hint { margin: 1rem 0 0; font-size: .875rem; color: var(--s-ink-2); }
+
+/* Portail Infra */
+.portail { --s-bg: #EEF3FB; --s-ink: #0F2342; --s-ink-2: #4A5B76; --s-line: rgba(15,35,66,.12); --s-card: #FFFFFF; }
+.roles { display: inline-flex; padding: 4px; border-radius: 10px; background: #E3EAF5; gap: 4px; margin-bottom: 1rem; }
+.roles button { border: 0; background: none; padding: 8px 14px; border-radius: 7px; cursor: pointer; color: #4A5B76; font-weight: 500; }
+.roles button[aria-pressed="true"] { background: #fff; color: #0F2342; box-shadow: 0 1px 2px rgba(15,35,66,.12); }
+.acc { display: grid; grid-template-columns: 1fr auto; gap: .25rem 1rem; align-items: center; padding: 1rem; border: 1px solid var(--s-line); border-radius: 10px; }
+.acc__name { font-weight: 600; }
+.acc__meta { font-size: .875rem; color: var(--s-ink-2); }
+.acc__pwd { grid-column: 1 / -1; font: 500 .95rem var(--mono); letter-spacing: .05em; }
+.acc .btn { min-height: 40px; border-color: #2860C8; color: #2860C8; border-radius: 8px; }
+.acc .btn:disabled { opacity: .45; cursor: not-allowed; }
+.why { margin: .6rem 0 0; font-size: .875rem; color: var(--s-ink-2); min-height: 1.4em; }
+.audit { margin: 1rem 0 0; padding: 0; list-style: none; border-top: 1px solid var(--s-line); font-size: .875rem; }
+.audit li { display: flex; gap: .75rem; padding: .55rem 0; border-bottom: 1px solid var(--s-line); }
+.audit time { font-family: var(--mono); color: var(--s-ink-2); font-size: .8rem; }
+.audit li.new { animation: entre 300ms ease-out; }
+@keyframes entre { from { opacity: 0; transform: translateY(-4px); } }
+
+/* CI/CD */
+.cicd { --s-bg: #141126; --s-ink: #ECE8FF; --s-ink-2: #A9A2CC; --s-line: rgba(236,232,255,.12); --s-card: #1D1935; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.steps li { display: grid; grid-template-columns: 22px 1fr auto; gap: .75rem; align-items: center; padding: .55rem .75rem; border-radius: 8px; background: rgba(236,232,255,.04); font-size: .95rem; }
+.steps li::before { content: ""; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #5C5580; }
+.steps li.run::before { border-color: #A893FF; border-right-color: transparent; animation: tourne 600ms linear infinite; }
+.steps li.ok::before { background: #6EDC9A; border-color: #6EDC9A; }
+.steps li span:last-child { font: 400 .8rem var(--mono); color: var(--s-ink-2); }
+@keyframes tourne { to { transform: rotate(360deg); } }
+.result { margin: 1rem 0 0; font: 500 .9rem var(--mono); min-height: 1.5em; color: #6EDC9A; }
+.cicd .btn { border-color: #A893FF; color: #ECE8FF; }
+.cicd .btn:hover { background: rgba(168,147,255,.12); }
+
+/* Jurassique (capture seule dans la maquette) */
+.jura { --s-bg: #F6EFEA; --s-ink: #2E3440; --s-ink-2: #6B6460; --s-line: rgba(46,52,64,.12); --s-card: #fff; }
+.shot { border-radius: 12px; overflow: hidden; border: 1px solid var(--s-line); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+
+.note { padding: 40px var(--pad); text-align: center; color: var(--ink-2); font-size: .95rem; }
+
+@media (max-width: 900px) {
+  .hero, .scene__grid { grid-template-columns: minmax(0, 1fr); }
+  .hero { min-height: 0; }
+  .fan { max-width: 520px; width: 100%; margin: 0 auto; }
+  .bar nav { display: none; }
+}
+@media (max-width: 560px) {
+  .chess__play { grid-template-columns: minmax(0, 1fr); }
+  .facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<header class="bar"><div class="wrap">
+  <a class="bar__name" href="#">Erdem Kurac</a>
+  <nav><a href="#echecs">Projets</a><a href="#">Parcours</a><a href="#">Contact</a></nav>
+</div></header>
+
+<section class="wrap hero">
+  <div>
+    <h1>Erdem Kurac</h1>
+    <p>Développeur en 3e année de BUT Informatique. Je construis des applications web complètes. <strong>Voici mes projets, et vous pouvez les essayer directement sur cette page.</strong></p>
+    <div class="actions">
+      <a class="btn btn--solid" href="#echecs">Essayer les projets</a>
+      <a class="btn" href="mailto:kuracerdem@gmail.com">M'écrire</a>
+    </div>
+  </div>
+  <div class="fan" aria-label="Aperçu des projets">
+    <a href="#jura"><img src="../assets/img/jurassique.webp" alt=""><span>Parc du Jurassique</span></a>
+    <a href="#echecs"><img src="../assets/img/echecs.webp" alt="" style="object-position: center"><span>Échecs en réseau</span></a>
+    <a href="#"><img src="../assets/img/prestige-auto.webp" alt=""><span>Prestige Auto</span></a>
+    <a href="#portail"><img src="../assets/img/portail-infra.webp" alt=""><span>Portail Infra</span></a>
+  </div>
+</section>
+
+<section id="echecs" class="scene chess"><div class="wrap scene__grid">
+  <div>
+    <p class="scene__kind">SAE en équipe de 4, déc. 2025 → janv. 2026</p>
+    <h2>Échecs en réseau chiffré</h2>
+    <p class="scene__lead">Deux joueurs s'affrontent en ligne. Personne entre eux ne peut lire les coups : chaque message est chiffré. J'ai conçu toute la partie réseau.</p>
+    <dl class="facts"><div><dt>Clés</dt><dd>ECDH</dd></div><div><dt>Chiffrement</dt><dd>AES-GCM</dd></div><div><dt>Parties</dt><dd>Plusieurs à la fois</dd></div></dl>
+    <p class="stack">Python, Pygame, sockets, cryptography</p>
+  </div>
+  <div class="demo">
+    <p class="demo__title">Jouez un coup <small>chiffrement réel, dans votre navigateur</small></p>
+    <div class="chess__play">
+      <div class="board" data-board aria-label="Échiquier"></div>
+      <div class="wire">
+        <p>Ce que vous envoyez</p><pre data-plain>Cliquez une pièce blanche, puis une case.</pre>
+        <p>Ce qui passe sur le réseau</p><pre class="cipher" data-cipher>…</pre>
+      </div>
+    </div>
+    <p class="hint">Les clés sont échangées par ECDH (P-256), puis chaque coup est chiffré en AES-GCM, comme dans le jeu.</p>
+  </div>
+</div></section>
+
+<section id="portail" class="scene portail"><div class="wrap scene__grid">
+  <div>
+    <p class="scene__kind">Stage, Centre Hospitalier de Gien, avril → juin 2026</p>
+    <h2>Portail Infra</h2>
+    <p class="scene__lead">L'outil interne qui range les comptes techniques des serveurs, montre à chacun seulement ce qu'il a le droit de voir, et note chaque action sensible.</p>
+    <dl class="facts"><div><dt>Connexion</dt><dd>LDAP + JWT</dd></div><div><dt>Mots de passe</dt><dd>Chiffrés AES</dd></div><div><dt>Code</dt><dd>65 commits, seul</dd></div></dl>
+    <p class="stack">Vue 3, Flask, MySQL, OpenLDAP, Docker</p>
+  </div>
+  <div class="demo">
+    <p class="demo__title">Changez de rôle <small>données fictives</small></p>
+    <div class="roles" role="group" aria-label="Rôle">
+      <button type="button" aria-pressed="true" data-role="Administrateur">Administrateur</button>
+      <button type="button" aria-pressed="false" data-role="Technicien">Technicien</button>
+      <button type="button" aria-pressed="false" data-role="Lecteur">Lecteur</button>
+    </div>
+    <div class="acc">
+      <div><div class="acc__name">svc_sauvegarde</div><div class="acc__meta">SRV-FICHIERS-01, service Informatique</div></div>
+      <button class="btn" type="button" data-reveal>Afficher le mot de passe</button>
+      <div class="acc__pwd" data-pwd>••••••••••••</div>
+    </div>
+    <p class="why" data-why></p>
+    <ul class="audit" data-audit aria-live="polite"><li><time>09:12</time><span>Administrateur s'est connecté (LDAP)</span></li></ul>
+  </div>
+</div></section>
+
+<section class="scene cicd"><div class="wrap scene__grid">
+  <div>
+    <p class="scene__kind">Module automatisation, BUT 3, sept. → oct. 2026</p>
+    <h2>Chaîne CI/CD</h2>
+    <p class="scene__lead">À chaque push, l'application est vérifiée, testée, scannée puis déployée, sans personne derrière. J'ai fait passer le build de 3 min 40 à 48 s.</p>
+    <dl class="facts"><div><dt>Build</dt><dd>48 s</dd></div><div><dt>Tests</dt><dd>xUnit, Vitest</dd></div><div><dt>Sécurité</dt><dd>Scan Trivy</dd></div></dl>
+    <p class="stack">GitHub Actions, Docker, .NET, React</p>
+  </div>
+  <div class="demo">
+    <p class="demo__title">Lancez la chaîne <small>les étapes du vrai workflow</small></p>
+    <ol class="steps" data-steps>
+      <li><span></span><span>Lint</span><span></span></li>
+      <li><span></span><span>Tests unitaires</span><span></span></li>
+      <li><span></span><span>Tests d'intégration</span><span></span></li>
+      <li><span></span><span>Build des images</span><span></span></li>
+      <li><span></span><span>Scan Trivy</span><span></span></li>
+      <li><span></span><span>Déploiement sur la VM</span><span></span></li>
+      <li><span></span><span>Test de fumée</span><span></span></li>
+    </ol>
+    <p class="result" data-result aria-live="polite"></p>
+    <button class="btn" type="button" data-run>Lancer la chaîne</button>
+  </div>
+</div></section>
+
+<section id="jura" class="scene jura"><div class="wrap scene__grid">
+  <div>
+    <p class="scene__kind">SAE en équipe de 4, sept. → déc. 2025</p>
+    <h2>Le Parc du Jurassique</h2>
+    <p class="scene__lead">La gestion d'un labo de paléontologie fictif, jusqu'à l'analyse de séquences ADN d'un million de bases.</p>
+    <p class="stack">Flask, SQLAlchemy, MySQL, Pytest</p>
+  </div>
+  <div class="shot"><img src="../assets/img/jurassique.webp" alt="Analyse d'un échantillon ADN"></div>
+</div></section>
+
+<p class="note">Maquette A : la suite (Prestige Auto avec filtres en direct, Parcours, Contact) suivrait le même principe.</p>
+
+<script>
+// Échecs : échiquier cliquable + vrai chiffrement ECDH / AES-GCM avec WebCrypto
+const board = document.querySelector("[data-board]");
+const N = { r: "rook", n: "knight", b: "bishop", q: "queen", k: "king", p: "pawn" };
+const NOMS = { rook: "tour", knight: "cavalier", bishop: "fou", queen: "dame", king: "roi", pawn: "pion" };
+const start = ["rnbqkbnr", "pppppppp", "        ", "        ", "        ", "        ", "PPPPPPPP", "RNBQKBNR"];
+let selected = null;
+const files = "abcdefgh";
+// Les pièces sont celles du vrai jeu (images du dépôt du projet)
+function put(b, code) {
+  b.dataset.piece = code || "";
+  b.innerHTML = "";
+  if (!code) return;
+  const color = code === code.toUpperCase() ? "white" : "black";
+  const img = document.createElement("img");
+  img.src = `../assets/img/pieces/${color}-${N[code.toLowerCase()]}.png`;
+  img.alt = ""; img.draggable = false;
+  b.appendChild(img);
+}
+start.forEach((row, r) => [...row].forEach((p, c) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = (r + c) % 2 ? "d" : "";
+  b.dataset.sq = files[c] + (8 - r);
+  b.setAttribute("aria-label", b.dataset.sq);
+  put(b, p.trim());
+  board.appendChild(b);
+}));
+
+let keyPromise = (async () => {
+  const p = { name: "ECDH", namedCurve: "P-256" };
+  const client = await crypto.subtle.generateKey(p, false, ["deriveKey"]);
+  const server = await crypto.subtle.generateKey(p, false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "ECDH", public: server.publicKey }, client.privateKey, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+})();
+
+const hex = (buf) => [...new Uint8Array(buf)].map((x) => x.toString(16).padStart(2, "0")).join("");
+async function send(from, to, code) {
+  const msg = JSON.stringify({ type: "coup", de: from, vers: to, piece: NOMS[N[code.toLowerCase()]] });
+  document.querySelector("[data-plain]").textContent = msg;
+  const key = await keyPromise;
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(msg));
+  document.querySelector("[data-cipher]").textContent = hex(iv) + hex(ct);
+}
+
+board.addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (!selected) {
+    const p = b.dataset.piece;
+    if (p && p === p.toUpperCase()) { selected = b; b.classList.add("sel"); }
+    return;
+  }
+  if (b !== selected) {
+    const code = selected.dataset.piece;
+    put(b, code); put(selected, "");
+    send(selected.dataset.sq, b.dataset.sq, code);
+  }
+  selected.classList.remove("sel"); selected = null;
+});
+
+// Portail : rôles, mot de passe, journal d'audit
+let role = "Administrateur";
+const reveal = document.querySelector("[data-reveal]");
+const why = document.querySelector("[data-why]");
+const pwd = document.querySelector("[data-pwd]");
+const audit = document.querySelector("[data-audit]");
+const now = () => new Date().toTimeString().slice(0, 5);
+function log(text) {
+  const li = document.createElement("li"); li.className = "new";
+  li.innerHTML = `<time>${now()}</time><span></span>`; li.lastChild.textContent = text;
+  audit.prepend(li);
+}
+document.querySelectorAll("[data-role]").forEach((b) => b.addEventListener("click", () => {
+  role = b.dataset.role;
+  document.querySelectorAll("[data-role]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  pwd.textContent = "••••••••••••";
+  const reader = role === "Lecteur";
+  reveal.disabled = reader;
+  why.textContent = reader ? "Un lecteur voit les comptes, jamais les mots de passe." : "";
+  log(`${role} s'est connecté (LDAP)`);
+}));
+reveal.addEventListener("click", () => {
+  pwd.textContent = "Demo-Sauvegarde-26";
+  log(`${role} a affiché le mot de passe de svc_sauvegarde`);
+  setTimeout(() => { pwd.textContent = "••••••••••••"; }, 4000);
+});
+
+// CI/CD : rejoue les étapes
+const steps = [...document.querySelectorAll("[data-steps] li")];
+const run = document.querySelector("[data-run]");
+const result = document.querySelector("[data-result]");
+run.addEventListener("click", async () => {
+  run.disabled = true; result.textContent = "";
+  steps.forEach((s) => s.className = "");
+  for (const s of steps) {
+    s.className = "run";
+    await new Promise((r) => setTimeout(r, 420));
+    s.className = "ok";
+  }
+  result.textContent = "Déployé : commit 1dd7852 en ligne";
+  run.disabled = false; run.textContent = "Relancer";
+});
+</script>
+</body>
+</html>

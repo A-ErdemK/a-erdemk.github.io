@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette B, le Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+:root {
+  --wall: #23435A; --wall-2: #2B5069;
+  --win: #FBFBFC; --win-bar: #EEF0F3; --ink: #1A1F27; --ink-2: #5B6472; --line: rgba(26,31,39,.12);
+  --accent: #2F6FE4;
+  --sans: "Onest", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; overflow: hidden; font: 400 1rem/1.5 var(--sans); color: var(--ink); background: var(--wall); }
+button { font: inherit; }
+:focus-visible { outline: 3px solid #9CC2FF; outline-offset: 2px; }
+
+/* Fond d'écran : le nom en très grand, discret */
+.wall { position: fixed; inset: 0; background: radial-gradient(120% 90% at 80% 100%, var(--wall-2), var(--wall)); }
+.wall__name { position: absolute; right: 4vw; bottom: 9vh; margin: 0; font-size: clamp(4rem, 13vw, 12rem); font-weight: 600; line-height: .9; letter-spacing: -0.02em; color: rgba(255,255,255,.07); text-align: right; user-select: none; }
+
+/* Barre du haut */
+.top { position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; align-items: center; gap: 1.25rem; height: 34px; padding: 0 14px; background: rgba(14,28,40,.82); color: #E9EEF4; font-size: .875rem; }
+.top b { font-weight: 600; }
+.top .grow { flex: 1; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #5BD69A; margin-right: 6px; }
+
+/* Icônes du bureau */
+.icons { position: fixed; top: 54px; left: 18px; display: grid; gap: 10px; z-index: 1; }
+.icon { display: grid; justify-items: center; gap: 6px; width: 104px; padding: 8px 4px; border: 0; border-radius: 10px; background: none; color: #fff; cursor: pointer; text-align: center; font-size: .875rem; line-height: 1.25; }
+.icon:hover, .icon:focus-visible { background: rgba(255,255,255,.12); }
+.icon__img { width: 64px; height: 48px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,.35); background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+.icon__img img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.icon__img--txt { display: grid; place-items: center; font: 400 .75rem var(--mono); color: var(--ink-2); }
+
+/* Fenêtres */
+.win { position: fixed; z-index: 10; width: min(760px, 92vw); max-height: calc(100vh - 9vh - 130px); display: flex; flex-direction: column; background: var(--win); border: 1px solid rgba(255,255,255,.4); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 0 rgba(255,255,255,.4) inset, 0 24px 60px rgba(0,0,0,.35); animation: ouvre 200ms ease-out; }
+.win[hidden] { display: none; }
+@keyframes ouvre { from { opacity: 0; transform: translateY(6px) scale(.985); } }
+.win__bar { display: flex; align-items: center; gap: 10px; height: 42px; padding: 0 12px; background: var(--win-bar); border-bottom: 1px solid var(--line); cursor: grab; user-select: none; }
+.win__bar:active { cursor: grabbing; }
+.win__close { width: 14px; height: 14px; border-radius: 50%; border: 0; background: #F05F57; cursor: pointer; padding: 0; }
+.win__close:hover { box-shadow: 0 0 0 3px rgba(240,95,87,.3); }
+.win__title { flex: 1; text-align: center; font-size: .875rem; font-weight: 500; color: var(--ink-2); margin-right: 24px; }
+.win__body { overflow: auto; padding: 28px clamp(18px, 3vw, 36px) 32px; }
+.win h2 { margin: 0; font-size: 2rem; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+.win h2 + p { margin-top: .75rem; font-size: 1.1rem; }
+.win p { margin: 1rem 0 0; }
+.meta { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin: 1.25rem 0 0; padding: .9rem 0; border-block: 1px solid var(--line); font-size: .875rem; color: var(--ink-2); }
+.meta b { display: block; color: var(--ink); font-weight: 600; font-size: 1rem; }
+.win ul { margin: 1rem 0 0; padding-left: 1.2rem; }
+.win li { margin-top: .4rem; }
+.win figure { margin: 1.5rem 0 0; }
+.win figure img { width: 100%; border-radius: 8px; border: 1px solid var(--line); }
+.stack { margin-top: 1rem; color: var(--ink-2); font-size: .875rem; }
+.btn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.1rem; border-radius: 9px; border: 1px solid var(--ink); background: var(--ink); color: #fff; font-weight: 500; text-decoration: none; cursor: pointer; }
+.btn--ghost { background: none; color: var(--ink); }
+.row { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.5rem; }
+.readme { width: min(560px, 92vw); }
+.readme .win__body { font-size: 1.05rem; }
+.readme h2 { font-size: 2.4rem; }
+
+/* Dock */
+.dock { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 40; display: flex; gap: 6px; padding: 8px; border-radius: 16px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35); }
+.dock button { position: relative; width: 52px; height: 52px; padding: 0; border: 0; border-radius: 12px; overflow: hidden; cursor: pointer; background: #fff; transition: transform 150ms ease-out; }
+.dock button:hover, .dock button:focus-visible { transform: translateY(-4px); }
+.dock img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.dock button.txt { display: grid; place-items: center; font: 400 .7rem var(--mono); color: var(--ink-2); }
+.dock button.on::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--ink); }
+
+/* Mobile : écran d'accueil de téléphone, fenêtres en plein écran */
+@media (max-width: 720px) {
+  body { overflow: auto; }
+  .icons { position: relative; z-index: 1; top: 0; left: 0; grid-template-columns: repeat(3, 1fr); padding: 54px 12px 100px; }
+  .top .sub { display: none; }
+  .top { white-space: nowrap; }
+  .icon { width: auto; }
+  .win { inset: 34px 0 0 0 !important; width: 100%; max-height: none; border-radius: 0; }
+  .dock { display: none; }
+  .wall__name { font-size: 22vw; bottom: 4vh; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wall" aria-hidden="true"><p class="wall__name">Erdem<br>Kurac</p></div>
+
+<header class="top">
+  <b>Erdem Kurac</b><span class="sub">Développeur, BUT Informatique 3e année</span>
+  <span class="grow"></span>
+  <span><span class="dot"></span>Disponible pour un stage</span>
+  <time data-clock></time>
+</header>
+
+<nav class="icons" aria-label="Projets">
+  <button class="icon" data-open="readme"><span class="icon__img icon__img--txt">.txt</span>Lisez-moi</button>
+  <button class="icon" data-open="portail"><span class="icon__img"><img src="../assets/img/portail-infra.webp" alt=""></span>Portail Infra</button>
+  <button class="icon" data-open="echecs"><span class="icon__img"><img src="../assets/img/echecs.webp" alt=""></span>Échecs en réseau</button>
+  <button class="icon" data-open="prestige"><span class="icon__img"><img src="../assets/img/prestige-auto.webp" alt=""></span>Prestige Auto</button>
+  <button class="icon" data-open="jura"><span class="icon__img"><img src="../assets/img/jurassique.webp" alt=""></span>Parc du Jurassique</button>
+  <button class="icon" data-open="contact"><span class="icon__img icon__img--txt">@</span>Me contacter</button>
+</nav>
+
+<section class="win readme" id="readme" style="left: 50%; top: 12vh; transform: translateX(-50%)">
+  <div class="win__bar"><button class="win__close" aria-label="Fermer"></button><span class="win__title">Lisez-moi.txt</span></div>
+  <div class="win__body">
+    <h2>Bonjour, je suis Erdem.</h2>
+    <p>Développeur en 3e année de BUT Informatique à Orléans. Je construis des applications web complètes, du serveur à l'interface.</p>
+    <p>Ce site est mon bureau : <b>chaque icône est un projet</b>. Ouvrez-les, déplacez les fenêtres, fermez-les.</p>
+    <div class="row"><button class="btn" data-open="portail">Ouvrir mon projet de stage</button><button class="btn btn--ghost" data-open="contact">Me contacter</button></div>
+  </div>
+</section>
+
+<section class="win" id="portail" hidden style="left: 22vw; top: 9vh">
+  <div class="win__bar"><button class="win__close" aria-label="Fermer"></button><span class="win__title">Portail Infra</span></div>
+  <div class="win__body">
+    <h2>Portail Infra</h2>
+    <p>Mon stage au Centre Hospitalier de Gien : l'application interne qui range les comptes techniques des serveurs et trace chaque action sensible.</p>
+    <div class="meta"><span>Contexte<b>Stage, seul</b></span><span>Quand<b>avril → juin 2026</b></span><span>Volume<b>65 commits</b></span></div>
+    <ul>
+      <li>Connexion par l'annuaire LDAP, base locale en secours, jeton JWT.</li>
+      <li>Rôles administrateur, technicien, lecteur et droits par service.</li>
+      <li>Mots de passe chiffrés en AES, journal d'audit de chaque lecture.</li>
+    </ul>
+    <figure><img src="../assets/img/portail-infra.webp" alt="Écran des serveurs du Portail Infra, IP floutées"></figure>
+    <p class="stack">Vue 3, Flask, MySQL, OpenLDAP, Docker</p>
+  </div>
+</section>
+
+<section class="win" id="echecs" hidden style="left: 28vw; top: 13vh">
+  <div class="win__bar"><button class="win__close" aria-label="Fermer"></button><span class="win__title">Échecs en réseau</span></div>
+  <div class="win__body">
+    <h2>Échecs en réseau chiffré</h2>
+    <p>Un jeu d'échecs en ligne où chaque coup est chiffré. J'ai conçu toute la partie réseau.</p>
+    <div class="meta"><span>Contexte<b>SAE, équipe de 4</b></span><span>Chiffrement<b>ECDH + AES-GCM</b></span></div>
+    <figure><img src="../assets/img/echecs.webp" alt="Échiquier du jeu" style="max-width: 360px"></figure>
+  </div>
+</section>
+
+<section class="win" id="prestige" hidden style="left: 32vw; top: 16vh">
+  <div class="win__bar"><button class="win__close" aria-label="Fermer"></button><span class="win__title">Prestige Auto</span></div>
+  <div class="win__body">
+    <h2>Prestige Auto</h2>
+    <p>Le catalogue d'un garage en JavaScript natif, sans framework : routeur maison, filtres, favoris.</p>
+    <figure><img src="../assets/img/prestige-auto.webp" alt="Accueil de Prestige Auto"></figure>
+  </div>
+</section>
+
+<section class="win" id="jura" hidden style="left: 36vw; top: 19vh">
+  <div class="win__bar"><button class="win__close" aria-label="Fermer"></button><span class="win__title">Parc du Jurassique</span></div>
+  <div class="win__body">
+    <h2>Le Parc du Jurassique</h2>
+    <p>Gestion d'un labo de paléontologie fictif, jusqu'à l'analyse de séquences ADN.</p>
+    <figure><img src="../assets/img/jurassique.webp" alt="Analyse ADN"></figure>
+  </div>
+</section>
+
+<section class="win readme" id="contact" hidden style="left: 40vw; top: 22vh">
+  <div class="win__bar"><button class="win__close" aria-label="Fermer"></button><span class="win__title">Contact</span></div>
+  <div class="win__body">
+    <h2>Je cherche un stage.</h2>
+    <p>Écrivez-moi, je réponds vite.</p>
+    <div class="row"><a class="btn" href="mailto:kuracerdem@gmail.com">M'écrire</a><a class="btn btn--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/">LinkedIn</a></div>
+  </div>
+</section>
+
+<nav class="dock" aria-label="Dock">
+  <button class="txt on" data-open="readme" aria-label="Lisez-moi">.txt</button>
+  <button data-open="portail" aria-label="Portail Infra"><img src="../assets/img/portail-infra.webp" alt=""></button>
+  <button data-open="echecs" aria-label="Échecs"><img src="../assets/img/echecs.webp" alt=""></button>
+  <button data-open="prestige" aria-label="Prestige Auto"><img src="../assets/img/prestige-auto.webp" alt=""></button>
+  <button data-open="jura" aria-label="Jurassique"><img src="../assets/img/jurassique.webp" alt=""></button>
+  <button class="txt" data-open="contact" aria-label="Contact">@</button>
+</nav>
+
+<script>
+let z = 20;
+const focusWin = (w) => { w.style.zIndex = ++z; };
+function open(id) {
+  const w = document.getElementById(id);
+  w.hidden = false; focusWin(w);
+  document.querySelectorAll(`.dock [data-open="${id}"]`).forEach((b) => b.classList.add("on"));
+}
+document.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => open(b.dataset.open)));
+document.querySelectorAll(".win").forEach((w) => {
+  w.addEventListener("pointerdown", () => focusWin(w));
+  w.querySelector(".win__close").addEventListener("click", () => {
+    w.hidden = true;
+    document.querySelectorAll(`.dock [data-open="${w.id}"]`).forEach((b) => b.classList.remove("on"));
+  });
+  // Déplacer la fenêtre par sa barre de titre
+  const bar = w.querySelector(".win__bar");
+  bar.addEventListener("pointerdown", (e) => {
+    if (e.target.closest("button") || matchMedia("(max-width: 720px)").matches) return;
+    const r = w.getBoundingClientRect();
+    w.style.transform = "none"; w.style.left = r.left + "px"; w.style.top = r.top + "px";
+    const dx = e.clientX - r.left, dy = e.clientY - r.top;
+    const move = (ev) => { w.style.left = Math.max(0, ev.clientX - dx) + "px"; w.style.top = Math.max(34, ev.clientY - dy) + "px"; };
+    const up = () => { removeEventListener("pointermove", move); removeEventListener("pointerup", up); };
+    addEventListener("pointermove", move); addEventListener("pointerup", up);
+  });
+});
+const clock = document.querySelector("[data-clock]");
+const tick = () => { clock.textContent = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); };
+tick(); setInterval(tick, 10000);
+</script>
+</body>
+</html>

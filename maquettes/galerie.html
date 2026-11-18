@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquette C, la Galerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600&display=swap">
+<style>
+:root {
+  --blue: #1636C9; --blue-2: #0F2797; --paper: #FFFFFF; --ink: #121426; --ink-2: #5A5F78; --on: #FFFFFF; --on-2: rgba(255,255,255,.72);
+  --sans: "Familjen Grotesk", system-ui, sans-serif; --pad: clamp(16px, 4vw, 56px);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--blue); color: var(--on); font: 400 1rem/1.55 var(--sans); }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid #FFD84D; outline-offset: 3px; }
+
+.bar { position: fixed; inset: 0 0 auto 0; z-index: 10; display: flex; align-items: center; gap: 1.5rem; height: 64px; padding: 0 var(--pad); background: var(--blue); }
+.bar b { font-weight: 600; margin-right: auto; }
+.bar a { text-decoration: none; color: var(--on-2); }
+.bar a:hover { color: var(--on); }
+.bar .cta { padding: .5rem 1rem; border-radius: 999px; background: var(--paper); color: var(--ink); font-weight: 500; }
+
+/* Hero : une phrase, trois chiffres réels */
+.hero { min-height: 100vh; display: grid; align-content: end; padding: 120px var(--pad) 64px; }
+.hero h1 { margin: 0; max-width: 15ch; font-size: clamp(2.5rem, 5.4vw, 5rem); font-weight: 600; line-height: 1.02; letter-spacing: -0.02em; }
+.hero h1 span { color: var(--on-2); }
+.nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: clamp(40px, 7vw, 88px); padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.25); }
+.nums b { display: block; font-size: clamp(2rem, 4.4vw, 3.6rem); font-weight: 500; line-height: 1.05; }
+.nums span { color: var(--on-2); }
+
+/* Galerie horizontale épinglée */
+.gallery { position: relative; height: 600vh; }
+.gallery__stage { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+.gallery__head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 var(--pad) 20px; }
+.gallery__head h2 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 600; }
+.gallery__count { color: var(--on-2); font-variant-numeric: tabular-nums; }
+.track { display: flex; gap: clamp(16px, 2vw, 28px); padding: 0 var(--pad); will-change: transform; }
+.card { flex: 0 0 min(78vw, 1020px); display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(20px, 3vw, 44px); padding: clamp(20px, 3vw, 40px); border-radius: 22px; background: var(--paper); color: var(--ink); height: min(68vh, 600px); }
+.card__txt { display: flex; flex-direction: column; }
+.card__kind { margin: 0; color: var(--ink-2); font-size: .95rem; }
+.card h3 { margin: .6rem 0 0; font-size: clamp(1.8rem, 3.2vw, 2.8rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.015em; }
+.card p { margin: 1rem 0 0; font-size: 1.1rem; }
+.card ul { margin: 1rem 0 0; padding-left: 1.1rem; color: var(--ink-2); }
+.card li { margin-top: .35rem; }
+.card__stack { margin-top: auto !important; padding-top: 1rem; font-size: .95rem !important; color: var(--ink-2); }
+.card__img { border-radius: 14px; overflow: hidden; background: #EEF0F6; border: 1px solid rgba(18,20,38,.08); }
+.card__img img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.progress { margin: 24px var(--pad) 0; height: 3px; background: rgba(255,255,255,.2); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; width: 100%; background: var(--on); transform-origin: left; transform: scaleX(0); }
+
+.end { min-height: 80vh; display: grid; align-content: center; padding: 80px var(--pad); background: var(--blue-2); }
+.end h2 { margin: 0; max-width: 16ch; font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 600; line-height: 1.05; }
+.end a.big { display: inline-block; margin-top: 2rem; padding: 1rem 1.6rem; border-radius: 999px; background: var(--paper); color: var(--ink); font-weight: 600; font-size: 1.15rem; text-decoration: none; }
+
+/* Petits écrans ou mouvements réduits : simple liste verticale */
+@media (max-width: 820px), (prefers-reduced-motion: reduce) {
+  .gallery { height: auto; }
+  .gallery__stage { position: static; height: auto; overflow: visible; padding: 40px 0; }
+  .track { flex-direction: column; transform: none !important; }
+  .card { flex: none; height: auto; grid-template-columns: minmax(0, 1fr); }
+  .card__img { order: -1; aspect-ratio: 16 / 10; }
+  .progress, .gallery__count { display: none; }
+  .nums { grid-template-columns: minmax(0, 1fr); }
+  .bar a:not(.cta) { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="bar"><b>Erdem Kurac</b><a href="#projets">Projets</a><a href="#">Parcours</a><a class="cta" href="mailto:kuracerdem@gmail.com">M'écrire</a></header>
+
+<section class="hero">
+  <h1>Erdem Kurac, développeur. <span>Je construis des applications web complètes et je cherche un stage.</span></h1>
+  <div class="nums">
+    <div><b>580</b><span>contributions sur GitHub en un an</span></div>
+    <div><b>5</b><span>applications livrées, dont un stage</span></div>
+    <div><b>48 s</b><span>de build, au lieu de 3 min 40</span></div>
+  </div>
+</section>
+
+<section class="gallery" id="projets" data-gallery>
+  <div class="gallery__stage">
+    <div class="gallery__head"><h2>Projets</h2><span class="gallery__count" data-count>1 / 5</span></div>
+    <div class="track" data-track>
+      <article class="card"><div class="card__txt">
+        <p class="card__kind">Stage, avril → juin 2026</p><h3>Portail Infra</h3>
+        <p>L'outil interne du Centre Hospitalier de Gien pour ranger les comptes techniques des serveurs.</p>
+        <ul><li>Connexion LDAP et JWT</li><li>Mots de passe chiffrés en AES</li><li>Journal d'audit</li></ul>
+        <p class="card__stack">Vue 3, Flask, MySQL, Docker</p>
+      </div><div class="card__img"><img src="../assets/img/portail-infra.webp" alt="Écran des serveurs, IP floutées"></div></article>
+
+      <article class="card"><div class="card__txt">
+        <p class="card__kind">SAE, déc. 2025 → janv. 2026</p><h3>Échecs en réseau chiffré</h3>
+        <p>Un jeu d'échecs en ligne où chaque coup est chiffré. J'ai conçu la partie réseau.</p>
+        <ul><li>Échange de clés ECDH</li><li>Chiffrement AES-GCM</li><li>Plusieurs parties à la fois</li></ul>
+        <p class="card__stack">Python, Pygame, sockets</p>
+      </div><div class="card__img"><img src="../assets/img/echecs.webp" alt="Échiquier" style="object-position: center"></div></article>
+
+      <article class="card"><div class="card__txt">
+        <p class="card__kind">Module automatisation, sept. → oct. 2026</p><h3>Chaîne CI/CD</h3>
+        <p>À chaque push, l'application est testée, scannée et déployée toute seule.</p>
+        <ul><li>GitHub Actions</li><li>Scan Trivy</li><li>Déploiement par SSH</li></ul>
+        <p class="card__stack">Docker, .NET, React</p>
+      </div><div class="card__img" style="display:grid;place-items:center;font-size:1.1rem;color:#5A5F78">push, lint, tests, build, scan, déploiement</div></article>
+
+      <article class="card"><div class="card__txt">
+        <p class="card__kind">Module web, mars → avril 2026</p><h3>Prestige Auto</h3>
+        <p>Le catalogue d'un garage en JavaScript natif, sans framework.</p>
+        <ul><li>Routeur maison</li><li>Filtres et favoris</li><li>Build Rollup</li></ul>
+        <p class="card__stack">JavaScript, json-server</p>
+      </div><div class="card__img"><img src="../assets/img/prestige-auto.webp" alt="Accueil Prestige Auto"></div></article>
+
+      <article class="card"><div class="card__txt">
+        <p class="card__kind">SAE, sept. → déc. 2025</p><h3>Le Parc du Jurassique</h3>
+        <p>La gestion d'un labo de paléontologie fictif, jusqu'à l'analyse d'ADN.</p>
+        <ul><li>Flask et MySQL</li><li>Import de séquences</li><li>Tests Pytest</li></ul>
+        <p class="card__stack">Flask, SQLAlchemy, MySQL</p>
+      </div><div class="card__img"><img src="../assets/img/jurassique.webp" alt="Analyse ADN"></div></article>
+    </div>
+    <div class="progress"><i data-bar></i></div>
+  </div>
+</section>
+
+<section class="end">
+  <h2>Un stage pour finir mon BUT : parlons-en.</h2>
+  <a class="big" href="mailto:kuracerdem@gmail.com">kuracerdem@gmail.com</a>
+</section>
+
+<script>
+// Fait défiler la galerie à l'horizontale pendant que la page défile vers le bas
+const gallery = document.querySelector("[data-gallery]");
+const track = document.querySelector("[data-track]");
+const bar = document.querySelector("[data-bar]");
+const count = document.querySelector("[data-count]");
+const cards = track.children.length;
+const flat = matchMedia("(max-width: 820px), (prefers-reduced-motion: reduce)");
+function update() {
+  if (flat.matches) return;
+  const r = gallery.getBoundingClientRect();
+  const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+  const max = track.scrollWidth - innerWidth;
+  track.style.transform = `translateX(${-p * max}px)`;
+  bar.style.transform = `scaleX(${p})`;
+  count.textContent = `${Math.min(cards, Math.floor(p * cards) + 1)} / ${cards}`;
+}
+addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+addEventListener("resize", update);
+update();
+</script>
+</body>
+</html>
