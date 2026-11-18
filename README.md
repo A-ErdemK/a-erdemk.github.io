@@ -4,9 +4,12 @@ Mon portfolio, prévu sur https://a-erdemk.github.io.
 
 Site statique fait main (HTML, CSS, JavaScript, sans framework ni étape de build), pour GitHub Pages. Il marche aussi en ouvrant `index.html` directement depuis le disque.
 
-## Idée
+## Comment il est fait
 
-Tout tient sur un écran, comme une messagerie : ma présentation et mes contacts à gauche, la liste des projets au milieu, le détail du projet choisi à droite. Sur téléphone, on voit la liste, et toucher un projet ouvre son détail avec un bouton retour. Chaque projet a sa propre adresse (`#portail`, `#echecs`…) pour pouvoir l'envoyer directement.
+- Une seule page : présentation, carte de stage, projets, parcours, contact.
+- Le fond est une grille de points dessinée dans un `<canvas>` : elle s'éclaire autour de la souris, une vague la traverse et chaque clic lance une onde. Elle reste fixe sur téléphone et quand le système demande moins d'animations.
+- Les projets sont des cartes. Un clic ouvre la fiche dans un panneau (`<dialog>`) qui glisse depuis la droite. Chaque fiche a sa propre adresse (`#portail`, `#echecs`…) et le bouton retour du navigateur la referme.
+- Thème clair ou sombre selon l'ordinateur du visiteur, avec un bouton pour changer.
 
 Quatre projets ont une démo qui marche dans la page :
 
@@ -15,19 +18,15 @@ Quatre projets ont une démo qui marche dans la page :
 - Chaîne CI/CD : replay accéléré de deux vrais runs GitHub Actions du 12 octobre 2026 (un réussi, un en échec au test de fumée).
 - Parc du Jurassique : composition d'un échantillon d'ADN tiré au hasard ou d'un fichier du visiteur.
 
-Le robot de trading a aussi une courbe interactive des 301 trades du backtest v1.8.
+Le robot de trading a une courbe interactive des 301 trades du backtest.
 
 ## Données
 
-`assets/js/data.js` contient les données réelles des démos (runs CI extraits de l'API GitHub, courbe du backtest extraite de `docs/img/equity_curve.svg` du dépôt du robot).
-
-## Thèmes et palettes
-
-Le thème clair ou sombre suit l'ordinateur du visiteur, avec un bouton pour changer. Quatre palettes existent dans `assets/css/style.css` (`gulf`, `vert`, `graphite`, `lavande`) ; `choix.html` permet de les comparer. La palette retenue sera fixée dans l'attribut `data-palette` de `index.html`.
+`assets/js/data.js` contient les données réelles des démos : runs CI extraits de l'API GitHub, courbe du backtest extraite de `docs/img/equity_curve.svg` du dépôt du robot.
 
 ## Ajouter un projet
 
-Dans `index.html` : ajouter une ligne dans la liste (`<a class="list__item" data-project="...">`) et un `<article class="detail__item" data-detail id="...">` avec le même identifiant.
+Dans `index.html` : une carte `<li class="grid__item" data-cats="..."><a class="card" data-project="id">` dans la grille, et un `<article id="id" class="detail" data-detail hidden>` dans le panneau. Ajouter ensuite `id` au tableau `ORDER` de `assets/js/main.js`.
 
 ## Lancer en local
 
@@ -39,4 +38,4 @@ Puis ouvrir http://localhost:8000.
 
 ## Crédits
 
-chess.js (licence BSD-2, `assets/vendor/chess.js.LICENSE.txt`). Pièces d'échecs reprises du projet SAE 3.01.
+chess.js (licence BSD-2, `assets/vendor/chess.js.LICENSE.txt`). Pièces d'échecs reprises du projet SAE 3.01. Polices Geist, Geist Mono et Unbounded (Google Fonts).

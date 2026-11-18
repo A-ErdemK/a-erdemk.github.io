@@ -40,6 +40,7 @@
   /* ---------- Thème clair / sombre ---------- */
 
   const themeBtn = $("[data-theme-toggle]");
+  let onTheme = () => {};
   function syncThemeLabel() {
     themeBtn.setAttribute("aria-label", root.dataset.theme === "dark" ? "Passer en thème clair" : "Passer en thème sombre");
   }
@@ -50,6 +51,7 @@
       try { localStorage.setItem("theme", theme); } catch (e) { /* stockage indisponible */ }
     }
     syncThemeLabel();
+    onTheme();
   }
   themeBtn.addEventListener("click", () => setTheme(root.dataset.theme === "dark" ? "light" : "dark", true));
   matchMedia("(prefers-color-scheme: light)").addEventListener("change", (e) => {
@@ -57,92 +59,167 @@
   });
   syncThemeLabel();
 
-  /* ---------- Navigation : catalogue, fiche d'un projet, parcours ---------- */
+  /* ---------- Fond : grille de points qui réagit au curseur ---------- */
 
-  const shell = $("[data-shell]");
-  const narrow = matchMedia("(max-width: 900px)");
-  const catalog = $("[data-catalog]");
-  const pane = $("[data-detail-pane]");
-  const main = $("[data-main]");
-  const details = $$("[data-detail]");
-  const views = $$("[data-view]");
-  const tabs = $$("[data-tab]");
-  const ORDER = ["pipeline", "portail", "echecs", "cicd", "jurassique", "prestige", "bot"];
-  const titleOf = (id) => $(`#${id} h2`).textContent;
-  let catalogY = 0;
+  const matrix = $("[data-matrix]");
+  if (matrix && matrix.getContext) {
+    const ctx = matrix.getContext("2d");
+    const live = !reduceMotion && matchMedia("(pointer: fine)").matches;
+    const GAP = 26;
+    let w = 0, h = 0, mx = -9999, my = -9999, raf = 0, base = "", hi = "";
+    let ripples = []; // ondes de lumière lancées à chaque clic
+    const t0 = performance.now();
 
-  function route() {
-    const hash = decodeURIComponent(location.hash.slice(1));
-    if (hash === "parcours") return { view: "parcours", project: null };
-    if (ORDER.includes(hash)) return { view: "projets", project: hash };
-    return { view: "projets", project: null };
-  }
+    const readColors = () => {
+      const cs = getComputedStyle(root);
+      base = `rgb(${cs.getPropertyValue("--dot").trim()})`;
+      hi = `rgb(${cs.getPropertyValue("--dot-hi").trim()})`;
+    };
+    const size = () => {
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      w = innerWidth; h = innerHeight;
+      matrix.width = Math.round(w * dpr); matrix.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
 
-  // La zone qui défile : la colonne principale sur ordinateur, la page sur téléphone
-  const scroller = () => (narrow.matches ? document.scrollingElement : main);
-
-  function render(fromUser) {
-    const r = route();
-    const wasDetail = !pane.hidden;
-    views.forEach((v) => { v.hidden = v.dataset.view !== r.view; });
-    tabs.forEach((t) => (t.dataset.tab === r.view ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current")));
-    catalog.hidden = Boolean(r.project);
-    pane.hidden = !r.project;
-    details.forEach((d) => { d.hidden = d.id !== r.project; });
-    shell.classList.toggle("is-detail", Boolean(r.project));
-
-    if (r.project) {
-      const i = ORDER.indexOf(r.project);
-      const prev = ORDER[(i - 1 + ORDER.length) % ORDER.length];
-      const next = ORDER[(i + 1) % ORDER.length];
-      $("[data-prev]").href = `#${prev}`;
-      $("[data-prev-name]").textContent = titleOf(prev);
-      $("[data-next]").href = `#${next}`;
-      $("[data-next-name]").textContent = titleOf(next);
-      $("[data-detail-count]").textContent = `Projet ${i + 1} sur ${ORDER.length}`;
-      document.title = `${titleOf(r.project)}, Erdem Kurac`;
-    } else {
-      document.title = r.view === "parcours" ? "Parcours, Erdem Kurac" : "Erdem Kurac, développeur";
+    function draw(now) {
+      raf = 0;
+      const t = (now - t0) / 1000;
+      const oy = -((scrollY * 0.3) % GAP);
+      ctx.clearRect(0, 0, w, h);
+      const lit = [];
+      ctx.fillStyle = base;
+      ctx.globalAlpha = root.dataset.theme === "light" ? 0.24 : 0.22;
+      ripples = ripples.filter((r) => now - r.t < 1600);
+      const rings = ripples.map((r) => ({ x: r.x, y: r.y, rad: ((now - r.t) / 1000) * 620, k: 1 - (now - r.t) / 1600 }));
+      for (let y = GAP / 2 + oy; y < h + GAP; y += GAP) {
+        for (let x = GAP / 2; x < w; x += GAP) {
+          const dx = x - mx, dy = y - my, d = Math.sqrt(dx * dx + dy * dy);
+          const near = d < 210 ? 1 - d / 210 : 0;
+          let ring = 0;
+          for (const r of rings) {
+            const off = Math.abs(Math.hypot(x - r.x, y - r.y) - r.rad);
+            if (off < 46) ring = Math.max(ring, (1 - off / 46) * r.k);
+          }
+          // Une vague de lumière traverse lentement la grille
+          const wave = (live ? Math.pow(Math.max(0, Math.sin((x * 0.55 + y * 0.45) / 150 - t * 0.7)), 8) * 0.45 : 0) + ring;
+          if (near > 0 || wave > 0.02) lit.push(x, y, d, near, wave, dx, dy);
+          else ctx.fillRect(x - 1, y - 1, 2, 2);
+        }
+      }
+      ctx.fillStyle = hi;
+      for (let i = 0; i < lit.length; i += 7) {
+        const [x, y, d, near, wave, dx, dy] = lit.slice(i, i + 7);
+        const push = near * near * 7;
+        const px = d ? x + (dx / d) * push : x, py = d ? y + (dy / d) * push : y;
+        const r = 1.1 + near * 1.6 + Math.min(wave, 1) * 0.9;
+        ctx.globalAlpha = Math.min(1, 0.12 + near * 0.8 + wave);
+        ctx.beginPath(); ctx.arc(px, py, r, 0, 6.2832); ctx.fill();
+      }
+      if ((live || ripples.length) && !document.hidden) raf = requestAnimationFrame(draw);
     }
+    const redraw = () => { if (!raf) raf = requestAnimationFrame(draw); };
 
-    if (!fromUser) return;
-    // On remonte en haut d'une fiche, et on retrouve sa place dans le catalogue en revenant
-    scroller().scrollTop = r.project || r.view === "parcours" ? 0 : (wasDetail ? catalogY : 0);
-    if (r.project) $(`#${r.project} h2`).focus({ preventScroll: true });
-    else if (r.view === "parcours") $("#parcours-titre").focus({ preventScroll: true });
-    else if (wasDetail && lastCard) lastCard.focus({ preventScroll: true });
+    readColors(); size(); redraw();
+    onTheme = () => { readColors(); redraw(); };
+    addEventListener("resize", () => { size(); redraw(); });
+    addEventListener("scroll", redraw, { passive: true });
+    document.addEventListener("visibilitychange", redraw);
+    if (!reduceMotion) {
+      addEventListener("pointerdown", (e) => {
+        if (root.classList.contains("has-sheet")) return;
+        ripples.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+        if (ripples.length > 4) ripples.shift();
+        redraw();
+      }, { passive: true });
+    }
+    if (live) {
+      addEventListener("pointermove", (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+      document.documentElement.addEventListener("pointerleave", () => { mx = my = -9999; });
+    }
   }
 
+  // Un trait sous la barre du haut dès qu'on a fait défiler la page
+  const top = $(".top");
+  const stuck = () => top.classList.toggle("is-stuck", scrollY > 8);
+  addEventListener("scroll", stuck, { passive: true });
+  stuck();
+
+  /* ---------- Cartes : la bordure suit le curseur ---------- */
+
+  const grid = $("[data-grid]");
+  grid.addEventListener("pointermove", (e) => {
+    const card = e.target.closest(".card");
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    card.style.setProperty("--my", `${e.clientY - r.top}px`);
+  });
+
+  /* ---------- Fiche d'un projet : panneau qui glisse par-dessus la page ---------- */
+
+  const sheet = $("[data-sheet]");
+  const sheetScroll = $("[data-sheet-scroll]");
+  const details = $$("[data-detail]");
+  const ORDER = ["pipeline", "portail", "echecs", "cicd", "jurassique", "prestige", "bot"];
+  const BASE_TITLE = document.title;
+  const titleOf = (id) => $(`#${id} h2`).textContent;
+  const projectInHash = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    return ORDER.includes(id) ? id : null;
+  };
   let lastCard = null;
-  function go(hash, replace) {
-    if (location.hash !== hash) history[replace ? "replaceState" : "pushState"]({ fromCatalog: !replace && !route().project }, "", hash);
-    render(true);
+
+  function openSheet(id) {
+    details.forEach((d) => { d.hidden = d.id !== id; });
+    $("[data-count]").textContent = `Projet ${ORDER.indexOf(id) + 1} sur ${ORDER.length}`;
+    document.title = `${titleOf(id)}, Erdem Kurac`;
+    lastCard = $(`[data-project="${id}"]`);
+    sheetScroll.scrollTop = 0;
+    if (!sheet.open) {
+      root.classList.add("has-sheet");
+      sheet.showModal();
+    }
+    $(`#${id} h2`).focus({ preventScroll: true });
+  }
+
+  function hideSheet() {
+    if (sheet.open) sheet.close();
+    if (!root.classList.contains("has-sheet")) return;
+    root.classList.remove("has-sheet");
+    document.title = BASE_TITLE;
+    if (lastCard) lastCard.focus();
+  }
+
+  // Fermer : on revient en arrière si la fiche a été ouverte depuis la page, sinon on retire l'adresse du projet
+  function closeSheet() {
+    if (history.state && history.state.sheet) { history.back(); return; }
+    if (projectInHash()) history.replaceState(null, "", "#projets");
+    hideSheet();
   }
 
   $$("[data-project]").forEach((a) => a.addEventListener("click", (e) => {
     if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
     e.preventDefault();
-    catalogY = scroller().scrollTop;
-    lastCard = a;
-    go(`#${a.dataset.project}`);
+    history.pushState({ sheet: true }, "", `#${a.dataset.project}`);
+    openSheet(a.dataset.project);
   }));
-  tabs.forEach((t) => t.addEventListener("click", (e) => { e.preventDefault(); go(`#${t.dataset.tab}`); }));
-  $("[data-back]").addEventListener("click", (e) => {
-    e.preventDefault();
-    if (history.state && history.state.fromCatalog) history.back(); else go("#projets");
-  });
-  ["[data-prev]", "[data-next]"].forEach((sel) => $(sel).addEventListener("click", (e) => {
-    e.preventDefault();
-    go($(sel).getAttribute("href"), true);
+  $("[data-close]").addEventListener("click", closeSheet);
+  sheet.addEventListener("cancel", (e) => { e.preventDefault(); closeSheet(); });
+  sheet.addEventListener("close", () => { if (projectInHash()) closeSheet(); else hideSheet(); });
+  sheet.addEventListener("click", (e) => { if (e.target === sheet) closeSheet(); });
+  [["[data-prev]", -1], ["[data-next]", 1]].forEach(([sel, step]) => $(sel).addEventListener("click", () => {
+    const i = ORDER.indexOf(projectInHash());
+    const id = ORDER[(i + step + ORDER.length) % ORDER.length];
+    history.replaceState(history.state, "", `#${id}`);
+    openSheet(id);
   }));
-  document.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape" || pane.hidden || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
-    $("[data-back]").click();
+  addEventListener("popstate", () => {
+    const id = projectInHash();
+    if (id) openSheet(id); else hideSheet();
   });
-  addEventListener("popstate", () => render(true));
-  narrow.addEventListener("change", () => render(false));
 
-  // Filtres du catalogue
+  // Filtres des projets
   const filterBtns = $$("[data-filter]");
   const cardItems = $$("[data-cats]");
   const filterStatus = $("[data-filter-status]");
@@ -153,10 +230,12 @@
     cardItems.forEach((li) => {
       const show = f === "tout" || li.dataset.cats.split(" ").includes(f);
       li.hidden = !show;
+      li.classList.toggle("grid__item--wide", show && f === "tout" && li.dataset.wide === "1");
       if (show) n++;
     });
     filterStatus.textContent = `${n} projet${n > 1 ? "s" : ""} affiché${n > 1 ? "s" : ""}`;
   }));
+  $$(".grid__item--wide").forEach((li) => { li.dataset.wide = "1"; });
 
   // Mini-courbe du robot sur sa carte (données réelles du backtest)
   const spark = $("[data-spark]");
@@ -168,7 +247,9 @@
     spark.innerHTML = `<line class="spark-zero" x1="0" x2="320" y1="${y(0)}" y2="${y(0)}"/><path class="spark-area" d="${d} L320,${y(0)} L0,${y(0)} Z"/><path class="spark-line" d="${d}"/>`;
   }
 
-  render(false);
+  // Lien direct vers un projet (par exemple …/#echecs)
+  if (projectInHash()) openSheet(projectInHash());
+
 
   /* ---------- Démo Portail Infra : rôles, AES-256-CBC, journal d'audit ---------- */
 
