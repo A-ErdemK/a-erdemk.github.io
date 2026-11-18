@@ -123,6 +123,10 @@ button { font: inherit; }
 .jura { --s-bg: #F6EFEA; --s-ink: #2E3440; --s-ink-2: #6B6460; --s-line: rgba(46,52,64,.12); --s-card: #fff; }
 .shot { border-radius: 12px; overflow: hidden; border: 1px solid var(--s-line); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
 
+.btn--sm { min-height: 40px; padding: 0 1rem; }
+.contact { padding-block: clamp(72px, 10vw, 120px); }
+.contact h2 { margin: 0; font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 600; font-stretch: 118%; line-height: 1.1; }
+.contact p { margin: 1rem 0 0; font-size: 1.15rem; color: var(--ink-2); }
 .note { padding: 40px var(--pad); text-align: center; color: var(--ink-2); font-size: .95rem; }
 
 @media (max-width: 900px) {
@@ -141,7 +145,8 @@ button { font: inherit; }
 <body>
 <header class="bar"><div class="wrap">
   <a class="bar__name" href="#">Erdem Kurac</a>
-  <nav><a href="#echecs">Projets</a><a href="#">Parcours</a><a href="#">Contact</a></nav>
+  <nav><a href="#echecs">Projets</a><a href="https://www.linkedin.com/in/erdem-kurac-22b245388/">LinkedIn</a></nav>
+  <a class="btn btn--solid btn--sm" href="mailto:kuracerdem@gmail.com">M'écrire</a>
 </div></header>
 
 <section class="wrap hero">
@@ -151,6 +156,7 @@ button { font: inherit; }
     <div class="actions">
       <a class="btn btn--solid" href="#echecs">Essayer les projets</a>
       <a class="btn" href="mailto:kuracerdem@gmail.com">M'écrire</a>
+      <a class="btn" href="https://www.linkedin.com/in/erdem-kurac-22b245388/">LinkedIn</a>
     </div>
   </div>
   <div class="fan" aria-label="Aperçu des projets">
@@ -241,7 +247,8 @@ button { font: inherit; }
   <div class="shot"><img src="../assets/img/jurassique.webp" alt="Analyse d'un échantillon ADN"></div>
 </div></section>
 
-<p class="note">Maquette A : la suite (Prestige Auto avec filtres en direct, Parcours, Contact) suivrait le même principe.</p>
+<section class="wrap contact"><h2>Je cherche un stage pour finir mon BUT.</h2><p>Écrivez-moi, je réponds vite.</p><div class="actions"><a class="btn btn--solid" href="mailto:kuracerdem@gmail.com">M'écrire</a><a class="btn" href="https://www.linkedin.com/in/erdem-kurac-22b245388/">Voir mon LinkedIn</a></div></section>
+<p class="note">Maquette A : Prestige Auto (filtres en direct) et le Parcours suivraient le même principe.</p>
 
 <script>
 // Échecs : échiquier cliquable + vrai chiffrement ECDH / AES-GCM avec WebCrypto

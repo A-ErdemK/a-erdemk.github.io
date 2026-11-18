@@ -28,6 +28,9 @@ button { font: inherit; }
 .top { position: fixed; inset: 0 0 auto 0; z-index: 50; display: flex; align-items: center; gap: 1.25rem; height: 34px; padding: 0 14px; background: rgba(14,28,40,.82); color: #E9EEF4; font-size: .875rem; }
 .top b { font-weight: 600; }
 .top .grow { flex: 1; }
+.toplink { color: #E9EEF4; text-decoration: none; font-weight: 500; }
+.toplink:hover { text-decoration: underline; }
+.toplink--mail { padding: 3px 10px; border-radius: 6px; background: #E9EEF4; color: #14232F; }
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #5BD69A; margin-right: 6px; }
 
 /* Icônes du bureau */
@@ -77,7 +80,7 @@ button { font: inherit; }
 @media (max-width: 720px) {
   body { overflow: auto; }
   .icons { position: relative; z-index: 1; top: 0; left: 0; grid-template-columns: repeat(3, 1fr); padding: 54px 12px 100px; }
-  .top .sub { display: none; }
+  .top .sub, .top time, .top > span:has(.dot) { display: none; }
   .top { white-space: nowrap; }
   .icon { width: auto; }
   .win { inset: 34px 0 0 0 !important; width: 100%; max-height: none; border-radius: 0; }
@@ -94,6 +97,8 @@ button { font: inherit; }
   <b>Erdem Kurac</b><span class="sub">Développeur, BUT Informatique 3e année</span>
   <span class="grow"></span>
   <span><span class="dot"></span>Disponible pour un stage</span>
+  <a class="toplink" href="https://www.linkedin.com/in/erdem-kurac-22b245388/">LinkedIn</a>
+  <a class="toplink toplink--mail" href="mailto:kuracerdem@gmail.com">M'écrire</a>
   <time data-clock></time>
 </header>
 
@@ -112,7 +117,7 @@ button { font: inherit; }
     <h2>Bonjour, je suis Erdem.</h2>
     <p>Développeur en 3e année de BUT Informatique à Orléans. Je construis des applications web complètes, du serveur à l'interface.</p>
     <p>Ce site est mon bureau : <b>chaque icône est un projet</b>. Ouvrez-les, déplacez les fenêtres, fermez-les.</p>
-    <div class="row"><button class="btn" data-open="portail">Ouvrir mon projet de stage</button><button class="btn btn--ghost" data-open="contact">Me contacter</button></div>
+    <div class="row"><button class="btn" data-open="portail">Ouvrir mon projet de stage</button><a class="btn btn--ghost" href="mailto:kuracerdem@gmail.com">M'écrire</a><a class="btn btn--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/">LinkedIn</a></div>
   </div>
 </section>
 

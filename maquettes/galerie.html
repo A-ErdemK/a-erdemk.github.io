@@ -54,6 +54,8 @@ a { color: inherit; }
 
 .end { min-height: 80vh; display: grid; align-content: center; padding: 80px var(--pad); background: var(--blue-2); }
 .end h2 { margin: 0; max-width: 16ch; font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 600; line-height: 1.05; }
+.end__actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.end a.big--ghost { background: none; color: var(--on); border: 1px solid rgba(255,255,255,.6); }
 .end a.big { display: inline-block; margin-top: 2rem; padding: 1rem 1.6rem; border-radius: 999px; background: var(--paper); color: var(--ink); font-weight: 600; font-size: 1.15rem; text-decoration: none; }
 
 /* Petits écrans ou mouvements réduits : simple liste verticale */
@@ -65,12 +67,12 @@ a { color: inherit; }
   .card__img { order: -1; aspect-ratio: 16 / 10; }
   .progress, .gallery__count { display: none; }
   .nums { grid-template-columns: minmax(0, 1fr); }
-  .bar a:not(.cta) { display: none; }
+  .bar a[href="#projets"] { display: none; }
 }
 </style>
 </head>
 <body>
-<header class="bar"><b>Erdem Kurac</b><a href="#projets">Projets</a><a href="#">Parcours</a><a class="cta" href="mailto:kuracerdem@gmail.com">M'écrire</a></header>
+<header class="bar"><b>Erdem Kurac</b><a href="#projets">Projets</a><a href="https://www.linkedin.com/in/erdem-kurac-22b245388/">LinkedIn</a><a class="cta" href="mailto:kuracerdem@gmail.com">M'écrire</a></header>
 
 <section class="hero">
   <h1>Erdem Kurac, développeur. <span>Je construis des applications web complètes et je cherche un stage.</span></h1>
@@ -126,7 +128,7 @@ a { color: inherit; }
 
 <section class="end">
   <h2>Un stage pour finir mon BUT : parlons-en.</h2>
-  <a class="big" href="mailto:kuracerdem@gmail.com">kuracerdem@gmail.com</a>
+  <div class="end__actions"><a class="big" href="mailto:kuracerdem@gmail.com">M'écrire</a><a class="big big--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/">Voir mon LinkedIn</a></div>
 </section>
 
 <script>
