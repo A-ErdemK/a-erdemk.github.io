@@ -57,6 +57,85 @@
   });
   syncThemeLabel();
 
+  /* ---------- Navigation : liste des projets, détail, parcours ---------- */
+
+  const shell = $("[data-shell]");
+  const narrow = matchMedia("(max-width: 900px)");
+  const items = $$("[data-project]");
+  const details = $$("[data-detail]");
+  const views = $$("[data-view]");
+  const tabs = $$("[data-tab]");
+  const pane = $("[data-detail-pane]");
+  const ids = items.map((a) => a.dataset.project);
+  const DEFAULT = "portail";
+  let current = null;
+  let listY = 0;
+
+  function route() {
+    const hash = decodeURIComponent(location.hash.slice(1));
+    if (hash === "parcours") return { view: "parcours", project: null };
+    if (ids.includes(hash)) return { view: "projets", project: hash };
+    return { view: "projets", project: null };
+  }
+
+  function render(fromUser) {
+    const r = route();
+    views.forEach((v) => { v.hidden = v.dataset.view !== r.view; });
+    tabs.forEach((t) => (t.dataset.tab === r.view ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current")));
+    const shown = r.project || (narrow.matches ? null : DEFAULT);
+    const changed = shown !== current;
+    current = shown;
+    details.forEach((d) => { d.hidden = d.id !== shown; });
+    items.forEach((a) => (a.dataset.project === shown ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current")));
+    const wasDetail = shell.classList.contains("is-detail");
+    const isDetail = narrow.matches && r.view === "projets" && Boolean(r.project);
+    shell.classList.toggle("is-detail", isDetail);
+    if (fromUser) {
+      if (changed && pane) pane.scrollTop = 0;
+      // Sur téléphone, on revient à l'endroit de la liste qu'on avait quitté
+      if (narrow.matches) window.scrollTo(0, wasDetail && !isDetail ? listY : 0);
+      if (r.view === "parcours") $("#parcours-titre").focus({ preventScroll: true });
+      else if (narrow.matches && r.project) $(`#${r.project} h2`).focus({ preventScroll: true });
+    }
+  }
+
+  function go(hash) {
+    if (location.hash !== hash) history.pushState({ fromList: hash !== "#projets" && hash !== "#parcours" }, "", hash);
+    render(true);
+  }
+
+  items.forEach((a) => a.addEventListener("click", (e) => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+    e.preventDefault();
+    if (narrow.matches) listY = window.scrollY;
+    go(`#${a.dataset.project}`);
+  }));
+  tabs.forEach((t) => t.addEventListener("click", (e) => { e.preventDefault(); go(`#${t.dataset.tab}`); }));
+  $$("[data-back]").forEach((b) => b.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (history.state && history.state.fromList) history.back(); else go("#projets");
+  }));
+  addEventListener("popstate", () => render(true));
+  narrow.addEventListener("change", () => render(false));
+
+  // Flèches haut et bas dans la liste, Entrée pour aller au détail
+  $("#liste").addEventListener("keydown", (e) => {
+    const i = items.indexOf(document.activeElement);
+    if (i < 0) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const next = items[(i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length];
+      next.focus();
+      if (!narrow.matches) { history.replaceState(null, "", `#${next.dataset.project}`); render(true); }
+    } else if (e.key === "Enter" && !narrow.matches) {
+      e.preventDefault();
+      go(`#${items[i].dataset.project}`);
+      $(`#${items[i].dataset.project} h2`).focus();
+    }
+  });
+
+  render(false);
+
   /* ---------- Démo Portail Infra : rôles, AES-256-CBC, journal d'audit ---------- */
 
   const portail = $(".demo--portail");

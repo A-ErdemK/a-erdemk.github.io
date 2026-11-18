@@ -31,7 +31,7 @@
   </script>
 </head>
 <body>
-  <a class="skip" href="#projets">Aller aux projets</a>
+  <a class="skip" href="#liste">Aller aux projets</a>
 
   <!-- Icônes des projets -->
   <svg class="sprite" aria-hidden="true" focusable="false">
@@ -41,83 +41,112 @@
     <symbol id="i-car" viewBox="0 0 24 24"><path d="M2.5 15.5v-3l3-4.5h9.5l3.5 4.5h1.5a1.5 1.5 0 0 1 1.5 1.5v1.5"/><path d="M5 15.5h11.5"/><circle cx="7.5" cy="16" r="2"/><circle cx="18" cy="16" r="2"/></symbol>
     <symbol id="i-curve" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="m6.5 15 3.5-4 3 2.5 4.5-5.5"/></symbol>
     <symbol id="i-candles" viewBox="0 0 24 24"><path d="M7 3.5v17M12 6v14M17 3v13"/><rect x="5.2" y="8" width="3.6" height="7" rx="0.8"/><rect x="10.2" y="10.5" width="3.6" height="5" rx="0.8"/><rect x="15.2" y="5.5" width="3.6" height="6.5" rx="0.8"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 10.5v6M8 7.6v.1M11.5 16.5v-3.4c0-1.6 1-2.6 2.4-2.6s2.1 1 2.1 2.6v3.4M11.5 10.5v6"/></symbol>
+    <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4 1.3-4-2-5.5-2.5M14.5 21v-3.2c0-1 .1-1.5-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6.2 0C6.1 3.1 5.1 3.4 5.1 3.4a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 3.7 9.8c0 4.6 2.7 5.7 5.5 6-.6.5-.6 1.2-.5 2V21"/></symbol>
     <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m4 7.5 8 6 8-6"/></symbol>
   </svg>
 
-
-  <header class="menubar">
-    <div class="menubar__in">
-      <a class="menubar__name" href="#top">Erdem Kurac</a>
-      <nav class="menubar__nav" aria-label="Sections">
-        <a href="#projets">Projets</a>
-        <a href="#parcours">Parcours</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <button class="icon-btn" type="button" data-theme-toggle aria-label="Passer en thème clair">
-        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A8 8 0 0 1 9.4 4.5a8 8 0 1 0 10.1 10.1Z"/></svg>
-      </button>
-      <a class="btn btn--accent btn--sm" href="#contact">Me contacter</a>
-    </div>
-  </header>
-
-  <main id="top">
-    <!-- Accueil : qui je suis à gauche, tous mes projets dans une fenêtre à droite -->
-    <section class="hero" aria-labelledby="hero-titre">
-      <div class="hero__text">
-        <h1 id="hero-titre">Erdem Kurac</h1>
-        <p class="hero__role">Développeur</p>
-        <p class="hero__lead">En 3e année de BUT Informatique à Orléans. J'aime construire des applications complètes, de la base de données jusqu'à l'écran.</p>
-        <p class="hero__status"><span class="dot" aria-hidden="true"></span>Je cherche un stage de fin d'études</p>
-        <div class="hero__actions">
-          <a class="btn btn--accent" href="#projets">Voir mes projets</a>
-          <a class="btn btn--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a>
+  <div class="shell" data-shell>
+    <!-- Colonne de gauche : qui je suis et comment me joindre, toujours visible -->
+    <aside class="side" aria-label="Présentation">
+      <div class="side__top">
+        <div class="side__id">
+          <h1>Erdem Kurac</h1>
+          <p class="side__role">Développeur</p>
         </div>
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Passer en thème clair">
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A8 8 0 0 1 9.4 4.5a8 8 0 1 0 10.1 10.1Z"/></svg>
+        </button>
+      </div>
+      <p class="side__bio">En 3e année de BUT Informatique à Orléans. J'aime construire des applications complètes, de la base de données jusqu'à l'écran.</p>
+      <p class="side__looking">Je cherche un <b>stage de fin d'études</b>.</p>
+
+      <div class="side__contact">
+        <a class="btn btn--accent" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage"><svg aria-hidden="true"><use href="#i-mail"/></svg>M'écrire</a>
+        <a class="btn" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me"><svg aria-hidden="true"><use href="#i-in"/></svg>LinkedIn</a>
+        <button class="btn btn--quiet" type="button" data-copy="kuracerdem@gmail.com">Copier mon adresse e-mail</button>
       </div>
 
-      <nav class="finder" aria-label="Mes projets en bref">
-        <div class="finder__bar">
-          <span class="dots" aria-hidden="true"></span>
-          <span class="finder__title">~/projets</span>
-        </div>
-        <ul class="finder__list">
-          <li><a href="#portail"><span class="finder__thumb ico--portail" aria-hidden="true"><svg><use href="#i-key"/></svg></span><span class="finder__txt"><b>Portail Infra</b><small>Les comptes techniques d'un hôpital</small></span><span class="tag">Stage</span></a></li>
-          <li><a href="#echecs"><span class="finder__thumb ico--echecs" aria-hidden="true"><img src="assets/img/pieces/white-knight.png" alt=""></span><span class="finder__txt"><b>Échecs en réseau</b><small>Une partie en ligne, tout chiffré</small></span><span class="tag">SAE</span></a></li>
-          <li><a href="#cicd"><span class="finder__thumb ico--cicd" aria-hidden="true"><svg><use href="#i-flow"/></svg></span><span class="finder__txt"><b>Chaîne CI/CD</b><small>Tester et déployer sans y toucher</small></span><span class="tag">Module</span></a></li>
-          <li><a href="#jurassique"><span class="finder__thumb ico--jura" aria-hidden="true"><svg><use href="#i-dna"/></svg></span><span class="finder__txt"><b>Parc du Jurassique</b><small>Gérer un labo, analyser de l'ADN</small></span><span class="tag">SAE</span></a></li>
-          <li><a href="#prestige"><span class="finder__thumb ico--prestige" aria-hidden="true"><svg><use href="#i-car"/></svg></span><span class="finder__txt"><b>Prestige Auto</b><small>Un catalogue de voitures en JavaScript pur</small></span><span class="tag">Module</span></a></li>
-          <li><a href="#pipeline"><span class="finder__thumb ico--pipeline" aria-hidden="true"><svg><use href="#i-curve"/></svg></span><span class="finder__txt"><b>Desktop Data Pipeline</b><small>Une application de bureau pour un labo</small></span><span class="tag tag--live">En cours</span></a></li>
-          <li><a href="#bot"><span class="finder__thumb ico--bot" aria-hidden="true"><svg><use href="#i-candles"/></svg></span><span class="finder__txt"><b>Robot de trading</b><small>Un projet perso, écrit en MQL5</small></span><span class="tag">Perso</span></a></li>
-        </ul>
+      <nav class="tabs" aria-label="Sections">
+        <a href="#projets" data-tab="projets" aria-current="page">Projets</a>
+        <a href="#parcours" data-tab="parcours">Parcours</a>
       </nav>
-    </section>
 
-    <section id="projets" class="projects" aria-labelledby="projets-titre">
-      <div class="section-head">
-        <h2 id="projets-titre">Mes projets</h2>
-        <p>Quatre d'entre eux s'essaient directement ici.</p>
-      </div>
+      <p class="side__foot">Ce site est lui aussi un projet : fait main, sans framework. <a href="https://github.com/A-ErdemK" rel="me">GitHub</a></p>
+    </aside>
 
-      <!-- Portail Infra -->
-      <article id="portail" class="app" aria-labelledby="portail-titre">
-        <div class="app__bar">
-          <span class="app__icon ico--portail" aria-hidden="true"><svg><use href="#i-key"/></svg></span>
-          <span class="app__name">Stage au Centre Hospitalier de Gien</span>
-          <span class="app__ctx">Avril à juin 2026</span>
-        </div>
-        <div class="app__body">
-          <div class="app__text">
-            <h3 id="portail-titre">Portail Infra</h3>
-            <p class="app__pitch">Pendant mon stage, j'ai développé l'application interne qui range les comptes techniques des serveurs par service. Chacun ne voit que ce que son rôle autorise, et chaque action sensible est enregistrée.</p>
+    <main class="main" data-main>
+      <!-- Projets : la liste à gauche, le détail à droite -->
+      <section class="view view--projects" data-view="projets" aria-label="Projets">
+        <nav class="list" id="liste" aria-label="Liste des projets">
+          <p class="list__label">En ce moment</p>
+          <ul class="list__group">
+            <li><a class="list__item list__item--live" href="#pipeline" data-project="pipeline"><span class="list__icon ico--pipeline" aria-hidden="true"><svg><use href="#i-curve"/></svg></span><span class="list__txt"><b>Desktop Data Pipeline</b><small>L'application de bureau de notre SAE</small></span><span class="list__meta"><span class="chip chip--live"><span class="live" aria-hidden="true"></span>En cours</span></span></a></li>
+          </ul>
+          <p class="list__label">Projets</p>
+          <ul class="list__group">
+          <li><a class="list__item" href="#portail" data-project="portail"><span class="list__icon ico--portail" aria-hidden="true"><svg><use href="#i-key"/></svg></span><span class="list__txt"><b>Portail Infra</b><small>Les comptes techniques d'un hôpital</small></span><span class="list__meta"><span class="list__kind">Stage</span><span class="chip chip--demo">Démo</span></span></a></li>
+          <li><a class="list__item" href="#echecs" data-project="echecs"><span class="list__icon ico--echecs" aria-hidden="true"><img src="assets/img/pieces/white-knight.png" alt=""></span><span class="list__txt"><b>Échecs en réseau</b><small>Une partie en ligne, tout chiffré</small></span><span class="list__meta"><span class="list__kind">SAE</span><span class="chip chip--demo">Démo</span></span></a></li>
+          <li><a class="list__item" href="#cicd" data-project="cicd"><span class="list__icon ico--cicd" aria-hidden="true"><svg><use href="#i-flow"/></svg></span><span class="list__txt"><b>Chaîne CI/CD</b><small>Tester et déployer sans y toucher</small></span><span class="list__meta"><span class="list__kind">Module</span><span class="chip chip--demo">Démo</span></span></a></li>
+          <li><a class="list__item" href="#jurassique" data-project="jurassique"><span class="list__icon ico--jura" aria-hidden="true"><svg><use href="#i-dna"/></svg></span><span class="list__txt"><b>Le Parc du Jurassique</b><small>Gérer un labo, analyser de l'ADN</small></span><span class="list__meta"><span class="list__kind">SAE</span><span class="chip chip--demo">Démo</span></span></a></li>
+          <li><a class="list__item" href="#prestige" data-project="prestige"><span class="list__icon ico--prestige" aria-hidden="true"><svg><use href="#i-car"/></svg></span><span class="list__txt"><b>Prestige Auto</b><small>Un catalogue de voitures en JavaScript pur</small></span><span class="list__meta"><span class="list__kind">Module</span></span></a></li>
+          <li><a class="list__item" href="#bot" data-project="bot"><span class="list__icon ico--bot" aria-hidden="true"><svg><use href="#i-candles"/></svg></span><span class="list__txt"><b>Robot de trading</b><small>Un robot de trading, testé de 2022 à 2026</small></span><span class="list__meta"><span class="list__kind">Perso</span></span></a></li>
+          </ul>
+          <p class="list__hint">Les projets marqués <span class="chip chip--demo">Démo</span> s'essaient directement ici.</p>
+        </nav>
+
+        <div class="detail" data-detail-pane>
+        <article id="pipeline" class="detail__item" data-detail aria-labelledby="pipeline-titre" hidden>
+          <header class="detail__head">
+            <a class="back" href="#projets" data-back><svg aria-hidden="true"><use href="#i-back"/></svg>Tous les projets</a>
+            <div class="detail__title">
+              <span class="app__icon ico--pipeline" aria-hidden="true"><svg><use href="#i-curve"/></svg></span>
+              <div><h2 id="pipeline-titre" tabindex="-1">Desktop Data Pipeline</h2><p class="detail__ctx">SAE de BUT 3 en équipe, depuis septembre 2026</p></div>
+            </div>
+          </header>
+          <div class="detail__body">
+            <div class="detail__text">
+              <p class="app__pitch">Notre SAE de 3e année : une application de bureau qui importe les mesures de trois appareils de laboratoire (XPS, Raman et électrochimie), les range en base et les affiche en courbes.</p>
+            <ul class="app__points">
+              <li>Interface PyQt6, lecture des fichiers avec Pandas, base gérée par SQLAlchemy et Alembic.</li>
+              <li>Rôles, journal des actions, et exécutables pour Windows, macOS et Linux.</li>
+            </ul>
+            <p class="app__stack">Python, PyQt6, Pandas, SQLAlchemy, PyInstaller</p>
+            </div>
+            <div class="branches">
+            <p class="branches__title">Quelques branches du chantier</p>
+            <ul>
+              <li><code>feat/parser-xps</code></li>
+              <li><code>feat/parser-raman</code></li>
+              <li><code>feat/parser-electrochimie</code></li>
+              <li><code>feat/visualisation</code></li>
+              <li><code>feat/build-v2</code></li>
+            </ul>
+            <p class="branches__note">La capture d'écran arrivera ici quand le projet sera terminé.</p>
+          </div>
+          </div>
+        </article>
+        <article id="portail" class="detail__item" data-detail aria-labelledby="portail-titre" hidden>
+          <header class="detail__head">
+            <a class="back" href="#projets" data-back><svg aria-hidden="true"><use href="#i-back"/></svg>Tous les projets</a>
+            <div class="detail__title">
+              <span class="app__icon ico--portail" aria-hidden="true"><svg><use href="#i-key"/></svg></span>
+              <div><h2 id="portail-titre" tabindex="-1">Portail Infra</h2><p class="detail__ctx">Stage au Centre Hospitalier de Gien, avril à juin 2026</p></div>
+            </div>
+          </header>
+          <div class="detail__body">
+            <div class="detail__text">
+              <p class="app__pitch">Pendant mon stage, j'ai développé l'application interne qui range les comptes techniques des serveurs par service. Chacun ne voit que ce que son rôle autorise, et chaque action sensible est enregistrée.</p>
             <ul class="app__points">
               <li>Connexion avec l'annuaire LDAP de l'hôpital, et une base locale de secours.</li>
               <li>Mots de passe chiffrés en AES-256, affichés seulement à la demande et tracés dans un journal d'audit.</li>
               <li>API Flask testée, interface en Vue 3, lancement avec Docker Compose.</li>
             </ul>
             <p class="app__stack">Vue 3, Flask, MySQL, OpenLDAP, JWT, Docker</p>
-          </div>
-
-          <div class="demo demo--portail">
+            </div>
+            <div class="demo demo--portail">
             <div class="demo__head">
               <p class="demo__title">Essayez avec chaque rôle</p>
               <p class="demo__note">Compte inventé, vrai chiffrement</p>
@@ -146,28 +175,26 @@
               <li><time>09:12</time><span>Administrateur s'est connecté</span></li>
             </ol>
           </div>
-        </div>
-      </article>
-
-      <!-- Échecs -->
-      <article id="echecs" class="app" aria-labelledby="echecs-titre">
-        <div class="app__bar">
-          <span class="app__icon ico--echecs" aria-hidden="true"><img src="assets/img/pieces/white-knight.png" alt=""></span>
-          <span class="app__name">SAE en équipe de quatre</span>
-          <span class="app__ctx">Déc. 2025 à janv. 2026</span>
-        </div>
-        <div class="app__body">
-          <div class="app__text">
-            <h3 id="echecs-titre">Échecs en réseau</h3>
-            <p class="app__pitch">Un jeu d'échecs en local ou en ligne contre un autre joueur. Dans l'équipe, je me suis occupé de la partie réseau : le serveur, la mise en relation des joueurs et le chiffrement des échanges.</p>
+          </div>
+        </article>
+        <article id="echecs" class="detail__item" data-detail aria-labelledby="echecs-titre" hidden>
+          <header class="detail__head">
+            <a class="back" href="#projets" data-back><svg aria-hidden="true"><use href="#i-back"/></svg>Tous les projets</a>
+            <div class="detail__title">
+              <span class="app__icon ico--echecs" aria-hidden="true"><img src="assets/img/pieces/white-knight.png" alt=""></span>
+              <div><h2 id="echecs-titre" tabindex="-1">Échecs en réseau</h2><p class="detail__ctx">SAE en équipe de quatre, décembre 2025 à janvier 2026</p></div>
+            </div>
+          </header>
+          <div class="detail__body">
+            <div class="detail__text">
+              <p class="app__pitch">Un jeu d'échecs en local ou en ligne contre un autre joueur. Dans l'équipe, je me suis occupé de la partie réseau : le serveur, la mise en relation des joueurs et le chiffrement des échanges.</p>
             <ul class="app__points">
               <li>Le serveur fait tourner plusieurs parties à la fois et valide chaque coup.</li>
               <li>Chaque joueur échange une clé avec le serveur (ECDH), puis tous les messages passent chiffrés en AES-GCM.</li>
             </ul>
             <p class="app__stack">Python, Pygame, sockets, cryptography, SQLite</p>
-          </div>
-
-          <div class="demo demo--echecs">
+            </div>
+            <div class="demo demo--echecs">
             <div class="demo__head">
               <p class="demo__title">Jouez contre le serveur</p>
               <p class="demo__note">Vous avez les blancs</p>
@@ -185,29 +212,27 @@
               </div>
             </div>
           </div>
-        </div>
-      </article>
-
-      <!-- CI/CD -->
-      <article id="cicd" class="app" aria-labelledby="cicd-titre">
-        <div class="app__bar">
-          <span class="app__icon ico--cicd" aria-hidden="true"><svg><use href="#i-flow"/></svg></span>
-          <span class="app__name">Module automatisation, BUT 3</span>
-          <span class="app__ctx">Sept. à oct. 2026</span>
-        </div>
-        <div class="app__body">
-          <div class="app__text">
-            <h3 id="cicd-titre">Chaîne CI/CD</h3>
-            <p class="app__pitch">Une application de tâches (React, .NET et MariaDB) équipée d'une chaîne automatique : chaque modification est testée, scannée puis déployée, et seulement si tout est vert.</p>
+          </div>
+        </article>
+        <article id="cicd" class="detail__item" data-detail aria-labelledby="cicd-titre" hidden>
+          <header class="detail__head">
+            <a class="back" href="#projets" data-back><svg aria-hidden="true"><use href="#i-back"/></svg>Tous les projets</a>
+            <div class="detail__title">
+              <span class="app__icon ico--cicd" aria-hidden="true"><svg><use href="#i-flow"/></svg></span>
+              <div><h2 id="cicd-titre" tabindex="-1">Chaîne CI/CD</h2><p class="detail__ctx">Module automatisation de BUT 3, septembre à octobre 2026</p></div>
+            </div>
+          </header>
+          <div class="detail__body">
+            <div class="detail__text">
+              <p class="app__pitch">Une application de tâches (React, .NET et MariaDB) équipée d'une chaîne automatique : chaque modification est testée, scannée puis déployée, et seulement si tout est vert.</p>
             <ul class="app__points">
               <li>Images Docker optimisées : le build est passé de 3 min 40 à 48 s.</li>
               <li>Lint, tests unitaires et d'intégration, scan de sécurité avec Trivy.</li>
               <li>Déploiement en test puis en production, vérifié par un test de fumée.</li>
             </ul>
             <p class="app__stack">GitHub Actions, Docker, .NET, React, Trivy</p>
-          </div>
-
-          <div class="demo demo--cicd">
+            </div>
+            <div class="demo demo--cicd">
             <div class="demo__head">
               <p class="demo__title">Rejouez un vrai déploiement</p>
               <p class="demo__note">12 octobre 2026, en accéléré</p>
@@ -223,29 +248,27 @@
               <p class="flow__clock"><span data-flow-clock>0:00</span> sur <span data-flow-total>3:52</span></p>
             </div>
           </div>
-        </div>
-      </article>
-
-      <!-- Jurassique -->
-      <article id="jurassique" class="app" aria-labelledby="jura-titre">
-        <div class="app__bar">
-          <span class="app__icon ico--jura" aria-hidden="true"><svg><use href="#i-dna"/></svg></span>
-          <span class="app__name">SAE en équipe de quatre</span>
-          <span class="app__ctx">Sept. à déc. 2025</span>
-        </div>
-        <div class="app__body">
-          <div class="app__text">
-            <h3 id="jura-titre">Le Parc du Jurassique</h3>
-            <p class="app__pitch">L'application de gestion d'un laboratoire de paléontologie inventé : le matériel, le personnel, les fouilles, le budget, et l'analyse des échantillons d'ADN.</p>
+          </div>
+        </article>
+        <article id="jurassique" class="detail__item" data-detail aria-labelledby="jura-titre" hidden>
+          <header class="detail__head">
+            <a class="back" href="#projets" data-back><svg aria-hidden="true"><use href="#i-back"/></svg>Tous les projets</a>
+            <div class="detail__title">
+              <span class="app__icon ico--jura" aria-hidden="true"><svg><use href="#i-dna"/></svg></span>
+              <div><h2 id="jura-titre" tabindex="-1">Le Parc du Jurassique</h2><p class="detail__ctx">SAE en équipe de quatre, septembre à décembre 2025</p></div>
+            </div>
+          </header>
+          <div class="detail__body">
+            <div class="detail__text">
+              <p class="app__pitch">L'application de gestion d'un laboratoire de paléontologie inventé : le matériel, le personnel, les fouilles, le budget, et l'analyse des échantillons d'ADN.</p>
             <ul class="app__points">
               <li>Back-end Flask et SQLAlchemy sur MySQL, avec comptes et rôles.</li>
               <li>Import de fichiers d'ADN d'environ un million de bases.</li>
               <li>Travail en équipe avec branches et revues de pull requests.</li>
             </ul>
             <p class="app__stack">Flask, SQLAlchemy, MySQL, Jinja, Pytest</p>
-          </div>
-
-          <div class="demo demo--jura">
+            </div>
+            <div class="demo demo--jura">
             <div class="demo__head">
               <p class="demo__title">Analysez un échantillon</p>
               <p class="demo__note">Au hasard, ou votre fichier</p>
@@ -265,83 +288,49 @@
             </div>
             <p class="demo__why" data-dna-msg aria-live="polite"></p>
           </div>
-        </div>
-      </article>
-
-      <!-- Prestige Auto -->
-      <article id="prestige" class="app" aria-labelledby="prestige-titre">
-        <div class="app__bar">
-          <span class="app__icon ico--prestige" aria-hidden="true"><svg><use href="#i-car"/></svg></span>
-          <span class="app__name">Module web, en binôme</span>
-          <span class="app__ctx">Mars à avril 2026</span>
-        </div>
-        <div class="app__body">
-          <div class="app__text">
-            <h3 id="prestige-titre">Prestige Auto</h3>
-            <p class="app__pitch">Le catalogue d'un garage de voitures de prestige, en JavaScript sans framework. Le sujet tombait bien : j'adore les voitures.</p>
+          </div>
+        </article>
+        <article id="prestige" class="detail__item" data-detail aria-labelledby="prestige-titre" hidden>
+          <header class="detail__head">
+            <a class="back" href="#projets" data-back><svg aria-hidden="true"><use href="#i-back"/></svg>Tous les projets</a>
+            <div class="detail__title">
+              <span class="app__icon ico--prestige" aria-hidden="true"><svg><use href="#i-car"/></svg></span>
+              <div><h2 id="prestige-titre" tabindex="-1">Prestige Auto</h2><p class="detail__ctx">Module web en binôme, mars à avril 2026</p></div>
+            </div>
+          </header>
+          <div class="detail__body">
+            <div class="detail__text">
+              <p class="app__pitch">Le catalogue d'un garage de voitures de prestige, en JavaScript sans framework. Le sujet tombait bien : j'adore les voitures.</p>
             <ul class="app__points">
               <li>Un routeur fait maison, des filtres, des favoris et des avis.</li>
               <li>Les images se chargent à l'affichage, et le tout est empaqueté avec Rollup.</li>
             </ul>
             <p class="app__stack">JavaScript, json-server, Rollup</p>
-          </div>
-          <figure class="shot">
+            </div>
+            <figure class="shot">
             <img src="assets/img/prestige-auto.webp" width="1200" height="758" loading="lazy" decoding="async" alt="Accueil de Prestige Auto Orléans avec les dernières voitures arrivées.">
           </figure>
-        </div>
-      </article>
-
-      <!-- En ce moment -->
-      <article id="pipeline" class="app" aria-labelledby="pipeline-titre">
-        <div class="app__bar">
-          <span class="app__icon ico--pipeline" aria-hidden="true"><svg><use href="#i-curve"/></svg></span>
-          <span class="app__name">Ce que je code en ce moment</span>
-          <span class="app__ctx"><span class="live" aria-hidden="true"></span>En cours</span>
-        </div>
-        <div class="app__body">
-          <div class="app__text">
-            <h3 id="pipeline-titre">Desktop Data Pipeline</h3>
-            <p class="app__pitch">Notre SAE de 3e année : une application de bureau qui importe les mesures de trois appareils de laboratoire (XPS, Raman et électrochimie), les range en base et les affiche en courbes.</p>
-            <ul class="app__points">
-              <li>Interface PyQt6, lecture des fichiers avec Pandas, base gérée par SQLAlchemy et Alembic.</li>
-              <li>Rôles, journal des actions, et exécutables pour Windows, macOS et Linux.</li>
-            </ul>
-            <p class="app__stack">Python, PyQt6, Pandas, SQLAlchemy, PyInstaller</p>
           </div>
-          <div class="branches">
-            <p class="branches__title">Quelques branches du chantier</p>
-            <ul>
-              <li><code>feat/parser-xps</code></li>
-              <li><code>feat/parser-raman</code></li>
-              <li><code>feat/parser-electrochimie</code></li>
-              <li><code>feat/visualisation</code></li>
-              <li><code>feat/build-v2</code></li>
-            </ul>
-            <p class="branches__note">La capture d'écran arrivera ici quand le projet sera terminé.</p>
-          </div>
-        </div>
-      </article>
-
-      <!-- Robot de trading -->
-      <article id="bot" class="app" aria-labelledby="bot-titre">
-        <div class="app__bar">
-          <span class="app__icon ico--bot" aria-hidden="true"><svg><use href="#i-candles"/></svg></span>
-          <span class="app__name">Projet perso</span>
-          <span class="app__ctx">Automne 2026</span>
-        </div>
-        <div class="app__body">
-          <div class="app__text">
-            <h3 id="bot-titre">Robot de trading</h3>
-            <p class="app__pitch">Pour le plaisir, à côté des cours : un robot pour MetaTrader 5, écrit en MQL5. Le plus gros du travail a été de le tester sérieusement.</p>
+        </article>
+        <article id="bot" class="detail__item" data-detail aria-labelledby="bot-titre" hidden>
+          <header class="detail__head">
+            <a class="back" href="#projets" data-back><svg aria-hidden="true"><use href="#i-back"/></svg>Tous les projets</a>
+            <div class="detail__title">
+              <span class="app__icon ico--bot" aria-hidden="true"><svg><use href="#i-candles"/></svg></span>
+              <div><h2 id="bot-titre" tabindex="-1">Robot de trading</h2><p class="detail__ctx">Projet perso, automne 2026</p></div>
+            </div>
+          </header>
+          <div class="detail__body">
+            <div class="detail__text">
+              <p class="app__pitch">Pour le plaisir, à côté des cours : un robot pour MetaTrader 5, écrit en MQL5. Le plus gros du travail a été de le tester sérieusement.</p>
             <ul class="app__points">
               <li>Plus de 60 variantes essayées, chacune notée dans un journal.</li>
               <li>Chaque règle vérifiée sur une période mise de côté pendant la mise au point.</li>
               <li>Scripts Python d'analyse, et simulation Monte-Carlo.</li>
             </ul>
             <p class="app__stack">MQL5, Python</p>
-          </div>
-
-          <div class="demo demo--bot">
+            </div>
+            <div class="demo demo--bot">
             <div class="demo__head">
               <p class="demo__title">301 trades testés de 2022 à 2026</p>
               <p class="demo__note">Survolez la courbe</p>
@@ -358,58 +347,33 @@
             </dl>
             <p class="demo__why">1 R, c'est la somme risquée sur un trade. Ce sont des tests sur des données passées, pas de l'argent réel : ils ne garantissent rien pour la suite.</p>
           </div>
+          </div>
+        </article>
         </div>
-      </article>
-    </section>
+      </section>
 
-    <section id="parcours" class="path" aria-labelledby="parcours-titre">
-      <div class="section-head">
-        <h2 id="parcours-titre">Parcours</h2>
-      </div>
-      <div class="path__grid">
-        <ol class="timeline">
-          <li><p class="timeline__date">2024 à 2027</p><p class="timeline__what">BUT Informatique, IUT d'Orléans</p></li>
-          <li><p class="timeline__date">Avril à juin 2026</p><p class="timeline__what">Stage de développeur au Centre Hospitalier de Gien</p></li>
-          <li class="timeline__next"><p class="timeline__date">2027</p><p class="timeline__what">Stage de fin d'études, peut-être chez vous</p></li>
-        </ol>
-        <dl class="skills">
-          <div><dt>Back-end</dt><dd>Python (Flask, Django), C# et .NET, Java. API REST, connexion JWT et LDAP.</dd></div>
-          <div><dt>Interfaces</dt><dd>Vue 3, React, JavaScript, TypeScript, HTML et CSS. Flutter pour le mobile, PyQt6 pour le bureau.</dd></div>
-          <div><dt>Données</dt><dd>MySQL, PostgreSQL, Oracle, SQLite : modélisation, requêtes, migrations.</dd></div>
-          <div><dt>Sécurité</dt><dd>Chiffrement AES et ECDH, mots de passe hachés, journal d'audit, scan de vulnérabilités.</dd></div>
-          <div><dt>Outils</dt><dd>Git en équipe, Docker, GitHub Actions, tests automatisés.</dd></div>
-        </dl>
-      </div>
-    </section>
-
-    <section id="contact" class="contact" aria-labelledby="contact-titre">
-      <div class="app app--mail">
-        <div class="app__bar">
-          <span class="app__icon ico--contact" aria-hidden="true"><svg><use href="#i-mail"/></svg></span>
-          <span class="app__name">Nouveau message</span>
-          <span class="app__ctx">Brouillon prêt</span>
-        </div>
-        <div class="mail">
-          <p class="mail__row"><span>À</span><span class="mail__to">kuracerdem@gmail.com</span></p>
-          <p class="mail__row"><span>Objet</span><span>Proposition de stage</span></p>
-          <div class="mail__body">
-            <h2 id="contact-titre">Un stage pour finir mon BUT ?</h2>
-            <p>Il ne manque plus que votre message.</p>
-            <div class="mail__actions">
-              <a class="btn btn--accent" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage">Écrire un e-mail</a>
-              <button class="btn" type="button" data-copy="kuracerdem@gmail.com">Copier l'adresse</button>
-              <a class="btn btn--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a>
-            </div>
+      <!-- Parcours et compétences -->
+      <section class="view view--path" data-view="parcours" id="parcours" aria-labelledby="parcours-titre" hidden>
+        <div class="path">
+          <h2 id="parcours-titre" tabindex="-1">Parcours et compétences</h2>
+          <div class="path__grid">
+            <ol class="timeline">
+              <li><p class="timeline__date">2024 à 2027</p><p class="timeline__what">BUT Informatique, IUT d'Orléans</p></li>
+              <li><p class="timeline__date">Avril à juin 2026</p><p class="timeline__what">Stage de développeur au Centre Hospitalier de Gien</p></li>
+              <li class="timeline__next"><p class="timeline__date">2027</p><p class="timeline__what">Stage de fin d'études, peut-être chez vous</p></li>
+            </ol>
+            <dl class="skills">
+              <div><dt>Back-end</dt><dd>Python (Flask, Django), C# et .NET, Java. API REST, connexion JWT et LDAP.</dd></div>
+              <div><dt>Interfaces</dt><dd>Vue 3, React, JavaScript, TypeScript, HTML et CSS. Flutter pour le mobile, PyQt6 pour le bureau.</dd></div>
+              <div><dt>Données</dt><dd>MySQL, PostgreSQL, Oracle, SQLite : modélisation, requêtes, migrations.</dd></div>
+              <div><dt>Sécurité</dt><dd>Chiffrement AES et ECDH, mots de passe hachés, journal d'audit, scan de vulnérabilités.</dd></div>
+              <div><dt>Outils</dt><dd>Git en équipe, Docker, GitHub Actions, tests automatisés.</dd></div>
+            </dl>
           </div>
         </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="foot">
-    <p>Ce site est lui aussi un projet : fait main, sans framework. Mis à jour en novembre 2026.</p>
-    <p class="foot__links"><a href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a><a href="https://github.com/A-ErdemK" rel="me">GitHub</a></p>
-  </footer>
+      </section>
+    </main>
+  </div>
 
   <p class="toast" data-toast role="status" aria-live="polite"></p>
 

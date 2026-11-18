@@ -6,13 +6,16 @@ Site statique fait main (HTML, CSS, JavaScript, sans framework ni étape de buil
 
 ## Idée
 
-Le site ressemble à un bureau d'ordinateur : une barre en haut, des fenêtres qu'on déplace, un dock, et une recherche (Ctrl K ou ⌘ K). Chaque projet est une fenêtre d'application, et cinq d'entre eux ont une partie interactive :
+Tout tient sur un écran, comme une messagerie : ma présentation et mes contacts à gauche, la liste des projets au milieu, le détail du projet choisi à droite. Sur téléphone, on voit la liste, et toucher un projet ouvre son détail avec un bouton retour. Chaque projet a sa propre adresse (`#portail`, `#echecs`…) pour pouvoir l'envoyer directement.
+
+Quatre projets ont une démo qui marche dans la page :
 
 - Portail Infra : changer de rôle, le mot de passe est vraiment chiffré en AES-256-CBC puis déchiffré à la demande, avec le journal d'audit.
 - Échecs en réseau : jouer contre le « serveur », coups légaux grâce à chess.js, échange ECDH et messages chiffrés en AES-GCM dans les deux sens (WebCrypto).
 - Chaîne CI/CD : replay accéléré de deux vrais runs GitHub Actions du 12 octobre 2026 (un réussi, un en échec au test de fumée).
 - Parc du Jurassique : composition d'un échantillon d'ADN tiré au hasard ou d'un fichier du visiteur.
-- Robot de trading : courbe interactive des 301 trades du backtest v1.8.
+
+Le robot de trading a aussi une courbe interactive des 301 trades du backtest v1.8.
 
 ## Données
 
@@ -24,7 +27,7 @@ Le thème clair ou sombre suit l'ordinateur du visiteur, avec un bouton pour cha
 
 ## Ajouter un projet
 
-Copier un `<article class="app">` dans `index.html`, changer l'`id`, la barre de fenêtre (contexte et dates), le texte, la capture et `data-search` (mots trouvés par la recherche). Ajouter une icône dans le dock si besoin.
+Dans `index.html` : ajouter une ligne dans la liste (`<a class="list__item" data-project="...">`) et un `<article class="detail__item" data-detail id="...">` avec le même identifiant.
 
 ## Lancer en local
 
