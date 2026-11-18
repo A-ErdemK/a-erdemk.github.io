@@ -1,4 +1,4 @@
-// Portfolio d'Erdem Kurac : thème, recherche, bureau et démos des projets.
+// Portfolio d'Erdem Kurac : thème, copie de l'adresse et démos des projets.
 // Tout fonctionne aussi en ouvrant index.html directement depuis le disque.
 
 (function () {
@@ -13,11 +13,8 @@
   const fmtInt = (n) => n.toLocaleString("fr-FR");
   const DATA = window.PORTFOLIO_DATA || {};
 
-  // Coordonnées lues dans la page (elles ne sont écrites qu'une fois, dans le HTML)
-  const MAILTO = $(".menubar__mail").href;
+  // Adresse lue dans la page (elle n'est écrite qu'une fois, dans le HTML)
   const EMAIL = $("[data-copy]").dataset.copy;
-  const LINKEDIN = $('a[href*="linkedin.com"]').href;
-  const GITHUB = $('a[href*="github.com"]').href;
 
   /* ---------- Message temporaire ---------- */
 
@@ -59,177 +56,6 @@
     if (root.dataset.themeAuto) setTheme(e.matches ? "light" : "dark", false);
   });
   syncThemeLabel();
-
-  // Raccourci affiché selon l'ordinateur
-  const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
-  $$("[data-shortcut]").forEach((k) => { k.textContent = isMac ? "⌘ K" : "Ctrl K"; });
-
-  // Navigateurs sans l'API popover : le bouton mène au contact
-  const statusBtn = $(".menubar__status");
-  if (!("popover" in HTMLElement.prototype)) {
-    statusBtn.removeAttribute("popovertarget");
-    statusBtn.addEventListener("click", () => goTo("#contact"));
-  }
-
-  function goTo(hash) {
-    const target = $(hash);
-    if (!target) return;
-    history.replaceState(null, "", hash);
-    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-    target.focus({ preventScroll: true });
-  }
-
-  /* ---------- Recherche (Ctrl K) ---------- */
-
-  const spot = $("[data-spotlight]");
-  const spotInput = $("[data-spot-input]");
-  const spotList = $("[data-spot-list]");
-  const spotEmpty = $("[data-spot-empty]");
-  const norm = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-
-  const entries = [];
-  $$("article.app[id]").forEach((a) => {
-    const icon = $(".app__icon", a);
-    entries.push({
-      group: "Projets", title: $("h3", a).textContent, sub: $(".app__name", a).textContent,
-      icon: icon ? icon.className.replace("app__icon", "").trim() : "", mono: icon ? icon.textContent : "",
-      keys: norm(`${$("h3", a).textContent} ${a.dataset.search || ""}`), run: () => goTo(`#${a.id}`),
-    });
-  });
-  entries.push(
-    { group: "Sections", title: "Parcours et compétences", sub: "BUT, stage, technologies", icon: "ico--bot", mono: "§", keys: norm("parcours formation but iut competences stage technologies python flask django c# .net java vue react javascript typescript flutter mysql postgresql oracle sqlite docker git github actions tests"), run: () => goTo("#parcours") },
-    { group: "Sections", title: "Me contacter", sub: "E-mail, LinkedIn", icon: "ico--contact", mono: "@", keys: norm("contact email mail linkedin stage ecrire"), run: () => goTo("#contact") },
-    { group: "Actions", title: "Écrire un e-mail", sub: EMAIL, icon: "ico--contact", mono: "@", keys: norm("ecrire email mail contacter message"), run: () => { location.href = MAILTO; } },
-    { group: "Actions", title: "Copier mon adresse e-mail", sub: "Pour l'ajouter à vos contacts", icon: "ico--contact", mono: "@", keys: norm("copier adresse email mail"), run: copyEmail },
-    { group: "Actions", title: "Ouvrir mon LinkedIn", sub: "Profil et parcours", icon: "ico--portail", mono: "in", keys: norm("linkedin profil reseau"), run: () => { location.href = LINKEDIN; } },
-    { group: "Actions", title: "Voir mon GitHub", sub: "Profil et activité", icon: "ico--cicd", mono: "gh", keys: norm("github code depots"), run: () => { location.href = GITHUB; } },
-    { group: "Actions", title: "Changer de thème", sub: "Clair ou sombre", icon: "ico--bot", mono: "◐", keys: norm("theme clair sombre dark light mode nuit"), run: () => setTheme(root.dataset.theme === "dark" ? "light" : "dark", true) },
-  );
-
-  let shown = [];
-  let active = 0;
-
-  function renderSpot() {
-    const words = norm(spotInput.value.trim()).split(/\s+/).filter(Boolean);
-    shown = words.length
-      ? entries.filter((e) => words.every((w) => e.keys.includes(w)))
-          .sort((a, b) => Number(norm(b.title).includes(words[0])) - Number(norm(a.title).includes(words[0])))
-      : entries;
-    spotList.replaceChildren();
-    let group = "";
-    shown.forEach((e, i) => {
-      if (e.group !== group) {
-        group = e.group;
-        const g = document.createElement("li");
-        g.className = "spot__group"; g.setAttribute("role", "presentation"); g.textContent = group;
-        spotList.appendChild(g);
-      }
-      const li = document.createElement("li");
-      li.className = "spot__item"; li.id = `spot-${i}`; li.setAttribute("role", "option");
-      li.innerHTML = `<span class="app__icon ${e.icon}" aria-hidden="true"></span><span><b></b><small></small></span>`;
-      li.querySelector(".app__icon").textContent = e.mono;
-      li.querySelector("b").textContent = e.title;
-      li.querySelector("small").textContent = e.sub;
-      li.addEventListener("mousemove", () => { if (active !== i) select(i); });
-      li.addEventListener("click", () => activate(i));
-      spotList.appendChild(li);
-    });
-    spotEmpty.hidden = shown.length > 0;
-    if (!shown.length) spotEmpty.textContent = `Rien pour « ${spotInput.value.trim()} ». Essayez « Docker », « Vue » ou « sécurité ».`;
-    select(0);
-  }
-
-  function select(i) {
-    if (!shown.length) { spotInput.removeAttribute("aria-activedescendant"); return; }
-    active = (i + shown.length) % shown.length;
-    $$(".spot__item", spotList).forEach((li) => li.setAttribute("aria-selected", String(li.id === `spot-${active}`)));
-    const el = $(`#spot-${active}`);
-    spotInput.setAttribute("aria-activedescendant", el.id);
-    el.scrollIntoView({ block: "nearest" });
-  }
-
-  function activate(i) {
-    const e = shown[i];
-    if (!e) return;
-    spot.close();
-    e.run();
-  }
-
-  function openSpot() {
-    if (spot.open) return;
-    spotInput.value = "";
-    renderSpot();
-    spot.showModal();
-    spotInput.focus();
-  }
-
-  $$("[data-spotlight-open]").forEach((b) => b.addEventListener("click", openSpot));
-  spotInput.addEventListener("input", renderSpot);
-  spotInput.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowDown") { e.preventDefault(); select(active + 1); }
-    else if (e.key === "ArrowUp") { e.preventDefault(); select(active - 1); }
-    else if (e.key === "Enter") { e.preventDefault(); activate(active); }
-  });
-  spot.addEventListener("click", (e) => { if (e.target === spot) spot.close(); });
-  document.addEventListener("keydown", (e) => {
-    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); spot.open ? spot.close() : openSpot(); }
-    else if (e.key === "/" && !typing && !spot.open) { e.preventDefault(); openSpot(); }
-  });
-
-  /* ---------- Le bureau : fenêtres déplaçables ---------- */
-
-  const desk = $("[data-desk]");
-  const tidy = $("[data-desk-tidy]");
-  const canDrag = matchMedia("(pointer: fine) and (min-width: 961px)");
-  let z = 3;
-
-  function tidyDesk() {
-    $$("[data-win]", desk).forEach((w) => w.removeAttribute("style"));
-    tidy.hidden = true;
-  }
-  function syncDrag() { desk.classList.toggle("can-drag", canDrag.matches); if (!canDrag.matches) tidyDesk(); }
-  canDrag.addEventListener("change", syncDrag);
-  syncDrag();
-  tidy.addEventListener("click", tidyDesk);
-  addEventListener("resize", () => { if (!tidy.hidden) tidyDesk(); });
-
-  $$("[data-win]", desk).forEach((win) => {
-    let start = null;
-    let moved = false;
-    win.addEventListener("pointerdown", (e) => {
-      if (!canDrag.matches || e.button !== 0) return;
-      const d = desk.getBoundingClientRect();
-      const r = win.getBoundingClientRect();
-      start = { x: e.clientX, y: e.clientY, left: r.left - d.left, top: r.top - d.top, w: d.width, h: d.height, ww: r.width, wh: r.height };
-      moved = false;
-      win.style.zIndex = ++z;
-    });
-    win.addEventListener("pointermove", (e) => {
-      if (!start) return;
-      const dx = e.clientX - start.x;
-      const dy = e.clientY - start.y;
-      if (!moved && Math.hypot(dx, dy) < 6) return;
-      if (!moved) {
-        moved = true;
-        try { win.setPointerCapture(e.pointerId); } catch (err) { /* pointeur déjà relâché */ }
-        win.classList.add("is-dragging");
-      }
-      const left = Math.min(Math.max(start.left + dx, -start.ww * 0.3), start.w - start.ww * 0.7);
-      const top = Math.min(Math.max(start.top + dy, -10), start.h - start.wh * 0.5);
-      Object.assign(win.style, { left: `${left}px`, top: `${top}px`, right: "auto", bottom: "auto", zIndex: z });
-    });
-    const end = () => {
-      if (moved) { tidy.hidden = false; win.classList.remove("is-dragging"); }
-      start = null;
-    };
-    win.addEventListener("pointerup", end);
-    win.addEventListener("pointercancel", end);
-    // Après un déplacement, le clic ne doit pas ouvrir le projet
-    win.addEventListener("click", (e) => { if (moved) { e.preventDefault(); moved = false; } });
-    win.addEventListener("dragstart", (e) => e.preventDefault());
-  });
 
   /* ---------- Démo Portail Infra : rôles, AES-256-CBC, journal d'audit ---------- */
 
@@ -285,7 +111,7 @@
       const reader = role === "Lecteur";
       reveal.disabled = reader;
       why.textContent = reader ? "Un lecteur voit la liste des comptes, jamais leurs mots de passe." : "";
-      log(`${role} s'est connecté par LDAP`);
+      log(`${role} s'est connecté`);
     }));
 
     reveal.addEventListener("click", async () => {
