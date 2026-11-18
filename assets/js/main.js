@@ -59,84 +59,192 @@
   });
   syncThemeLabel();
 
-  /* ---------- Fond : grille de points qui réagit au curseur ---------- */
+  /* ---------- Fond animé : le jeu de la vie (thème sombre), un plan de métro (thème clair) ---------- */
 
-  const matrix = $("[data-matrix]");
-  if (matrix && matrix.getContext) {
-    const ctx = matrix.getContext("2d");
-    const live = !reduceMotion && matchMedia("(pointer: fine)").matches;
-    const GAP = 26;
-    let w = 0, h = 0, mx = -9999, my = -9999, raf = 0, base = "", hi = "";
-    let ripples = []; // ondes de lumière lancées à chaque clic
+  const canvas = $("[data-matrix]");
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext("2d");
+    const live = !reduceMotion;
+    let w = 0, h = 0, mx = -9999, my = -9999, raf = 0, dark = true;
+    let ink = [0, 0, 0], hot = [0, 0, 0];
     const t0 = performance.now();
+    const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
-    const readColors = () => {
+    function readColors() {
       const cs = getComputedStyle(root);
-      base = `rgb(${cs.getPropertyValue("--dot").trim()})`;
-      hi = `rgb(${cs.getPropertyValue("--dot-hi").trim()})`;
-    };
-    const size = () => {
+      const v = (name) => cs.getPropertyValue(name).trim().split(",").map(Number);
+      ink = v("--dot"); hot = v("--dot-hi");
+      dark = root.dataset.theme !== "light";
+    }
+    function size() {
       const dpr = Math.min(2, devicePixelRatio || 1);
       w = innerWidth; h = innerHeight;
-      matrix.width = Math.round(w * dpr); matrix.height = Math.round(h * dpr);
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
+    }
 
-    function draw(now) {
-      raf = 0;
-      const t = (now - t0) / 1000;
-      const oy = -((scrollY * 0.3) % GAP);
-      ctx.clearRect(0, 0, w, h);
-      const lit = [];
-      ctx.fillStyle = base;
-      ctx.globalAlpha = root.dataset.theme === "light" ? 0.24 : 0.22;
-      ripples = ripples.filter((r) => now - r.t < 1600);
-      const rings = ripples.map((r) => ({ x: r.x, y: r.y, rad: ((now - r.t) / 1000) * 620, k: 1 - (now - r.t) / 1600 }));
-      for (let y = GAP / 2 + oy; y < h + GAP; y += GAP) {
-        for (let x = GAP / 2; x < w; x += GAP) {
-          const dx = x - mx, dy = y - my, d = Math.sqrt(dx * dx + dy * dy);
-          const near = d < 210 ? 1 - d / 210 : 0;
-          let ring = 0;
-          for (const r of rings) {
-            const off = Math.abs(Math.hypot(x - r.x, y - r.y) - r.rad);
-            if (off < 46) ring = Math.max(ring, (1 - off / 46) * r.k);
-          }
-          // Une vague de lumière traverse lentement la grille
-          const wave = (live ? Math.pow(Math.max(0, Math.sin((x * 0.55 + y * 0.45) / 150 - t * 0.7)), 8) * 0.45 : 0) + ring;
-          if (near > 0 || wave > 0.02) lit.push(x, y, d, near, wave, dx, dy);
-          else ctx.fillRect(x - 1, y - 1, 2, 2);
+    // Jeu de la vie de Conway : chaque cellule vit ou meurt selon ses huit voisines.
+    // La souris sème des cellules, un clic en lâche une poignée.
+    const CELL = 14;
+    let cols = 0, rows = 0, cells = null, next = null, ghost = null, lastStep = 0, lifeDirty = true;
+    function lifeInit() {
+      cols = Math.ceil(w / CELL); rows = Math.ceil(h / CELL);
+      cells = new Uint8Array(cols * rows); next = new Uint8Array(cols * rows); ghost = new Float32Array(cols * rows);
+      for (let i = 0; i < cells.length; i++) cells[i] = Math.random() < 0.16 ? 1 : 0;
+    }
+    function seed(x, y, radius) {
+      if (!cells) return;
+      const c0 = Math.floor(x / CELL), r0 = Math.floor(y / CELL);
+      for (let r = r0 - radius; r <= r0 + radius; r++) {
+        for (let c = c0 - radius; c <= c0 + radius; c++) {
+          if (c >= 0 && r >= 0 && c < cols && r < rows && Math.random() < 0.55) cells[r * cols + c] = 1;
         }
       }
-      ctx.fillStyle = hi;
-      for (let i = 0; i < lit.length; i += 7) {
-        const [x, y, d, near, wave, dx, dy] = lit.slice(i, i + 7);
-        const push = near * near * 7;
-        const px = d ? x + (dx / d) * push : x, py = d ? y + (dy / d) * push : y;
-        const r = 1.1 + near * 1.6 + Math.min(wave, 1) * 0.9;
-        ctx.globalAlpha = Math.min(1, 0.12 + near * 0.8 + wave);
-        ctx.beginPath(); ctx.arc(px, py, r, 0, 6.2832); ctx.fill();
+      lifeDirty = true;
+    }
+    function lifeStep() {
+      let population = 0;
+      for (let r = 0; r < rows; r++) {
+        const up = ((r - 1 + rows) % rows) * cols, mid = r * cols, down = ((r + 1) % rows) * cols;
+        for (let c = 0; c < cols; c++) {
+          const l = (c - 1 + cols) % cols, rr = (c + 1) % cols;
+          const n = cells[up + l] + cells[up + c] + cells[up + rr] + cells[mid + l] + cells[mid + rr] + cells[down + l] + cells[down + c] + cells[down + rr];
+          const i = mid + c, alive = cells[i] ? n === 2 || n === 3 : n === 3;
+          next[i] = alive ? 1 : 0;
+          if (cells[i] && !alive) ghost[i] = 1;
+          population += next[i];
+        }
       }
-      if ((live || ripples.length) && !document.hidden) raf = requestAnimationFrame(draw);
+      [cells, next] = [next, cells];
+      // Si la population s'éteint, on ressème quelques foyers
+      if (population < cells.length * 0.03) for (let k = 0; k < 6; k++) seed(Math.random() * w, Math.random() * h, 3);
     }
-    const redraw = () => { if (!raf) raf = requestAnimationFrame(draw); };
+    function drawLife(now) {
+      if (!cells || cols !== Math.ceil(w / CELL) || rows !== Math.ceil(h / CELL)) lifeInit();
+      if (live && now - lastStep > 110) {
+        lastStep = now;
+        if (mx > -999) seed(mx, my, 1);
+        lifeStep();
+        lifeDirty = true;
+      }
+      if (!lifeDirty) return;
+      lifeDirty = false;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = rgba(hot, 1);
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const i = r * cols + c, x = c * CELL, y = r * CELL;
+          if (cells[i]) {
+            const d = Math.hypot(x - mx, y - my);
+            ctx.globalAlpha = d < 200 ? 0.62 - (d / 200) * 0.38 : 0.24;
+            ctx.fillRect(x + 2, y + 2, CELL - 4, CELL - 4);
+          } else if (ghost[i] > 0.03) {
+            ctx.globalAlpha = ghost[i] * 0.12;
+            ctx.fillRect(x + 2, y + 2, CELL - 4, CELL - 4);
+            ghost[i] *= 0.88;
+          }
+        }
+      }
+    }
 
-    readColors(); size(); redraw();
-    onTheme = () => { readColors(); redraw(); };
-    addEventListener("resize", () => { size(); redraw(); });
-    addEventListener("scroll", redraw, { passive: true });
-    document.addEventListener("visibilitychange", redraw);
-    if (!reduceMotion) {
-      addEventListener("pointerdown", (e) => {
-        if (root.classList.contains("has-sheet")) return;
-        ripples.push({ x: e.clientX, y: e.clientY, t: performance.now() });
-        if (ripples.length > 4) ripples.shift();
-        redraw();
-      }, { passive: true });
+    // Plan de métro : six lignes, des rames qui circulent, des stations au nom des projets
+    const LINES = [[227, 0, 27], [0, 85, 164], [0, 166, 81], [255, 190, 0], [155, 89, 182], [255, 120, 0]];
+    const STOPS = ["Portail Infra", "Échecs", "CI/CD", "Jurassique", "Prestige Auto", "Pipeline", "Robot", "Orléans", "Gien", "Stage 2027", "BUT Info", "Vue 3", "Flask", "Docker"];
+    let lines = null, linesFor = "";
+    function buildLines() {
+      linesFor = `${w}x${h}`;
+      lines = [];
+      let s = 11;
+      const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+      let stop = 0;
+      LINES.forEach((color, li) => {
+        const across = li % 2 === 0;
+        let x = across ? -20 : w * (0.12 + rnd() * 0.76), y = across ? h * (0.12 + rnd() * 0.76) : -20;
+        const pts = [[x, y]];
+        while (across ? x < w + 20 : y < h + 20) {
+          const len = 90 + rnd() * 180;
+          if (across) {
+            if (rnd() < 0.55) x += len;
+            else { const dir = y < h * 0.25 ? 1 : y > h * 0.75 ? -1 : rnd() < 0.5 ? 1 : -1; x += len * 0.7; y += dir * len * 0.7; }
+          } else if (rnd() < 0.55) y += len;
+          else { const dir = x < w * 0.25 ? 1 : x > w * 0.75 ? -1 : rnd() < 0.5 ? 1 : -1; x += dir * len * 0.7; y += len * 0.7; }
+          pts.push([x, y]);
+        }
+        const dist = [0];
+        for (let i = 1; i < pts.length; i++) dist.push(dist[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+        const stops = pts.slice(1, -1)
+          .filter((p, i) => i % 2 === 0 && p[0] > 0 && p[0] < w && p[1] > 0 && p[1] < h)
+          .map((p) => ({ x: p[0], y: p[1], name: STOPS[stop++ % STOPS.length] }));
+        lines.push({ color, pts, dist, length: dist[dist.length - 1], stops, speed: 60 + rnd() * 50, offset: rnd() * 1000 });
+      });
     }
-    if (live) {
-      addEventListener("pointermove", (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
-      document.documentElement.addEventListener("pointerleave", () => { mx = my = -9999; });
+    function pointOn(line, at) {
+      let i = 1;
+      while (i < line.dist.length - 1 && line.dist[i] < at) i++;
+      const a = line.pts[i - 1], b = line.pts[i], k = (at - line.dist[i - 1]) / (line.dist[i] - line.dist[i - 1] || 1);
+      return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
     }
+    function drawMetro(now) {
+      if (linesFor !== `${w}x${h}`) buildLines();
+      const t = (now - t0) / 1000;
+      ctx.clearRect(0, 0, w, h);
+      ctx.lineWidth = 7; ctx.lineJoin = "round"; ctx.lineCap = "round";
+      for (const line of lines) {
+        ctx.strokeStyle = rgba(line.color, 1);
+        ctx.globalAlpha = 0.16;
+        ctx.beginPath();
+        line.pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+        ctx.stroke();
+      }
+      if (live) {
+        for (const line of lines) {
+          const run = (t * line.speed + line.offset) % (line.length * 2);
+          const [x, y] = pointOn(line, run > line.length ? 2 * line.length - run : run);
+          ctx.fillStyle = rgba(line.color, 1);
+          ctx.globalAlpha = 0.22; ctx.beginPath(); ctx.arc(x, y, 12, 0, 6.2832); ctx.fill();
+          ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(x, y, 5.5, 0, 6.2832); ctx.fill();
+        }
+      }
+      ctx.font = '600 12px "Geist", system-ui, sans-serif';
+      ctx.lineWidth = 3;
+      for (const line of lines) {
+        for (const stop of line.stops) {
+          const d = Math.hypot(stop.x - mx, stop.y - my), near = d < 150 ? 1 - d / 150 : 0;
+          ctx.globalAlpha = 0.5 + near * 0.5;
+          ctx.fillStyle = "#FFFFFF";
+          ctx.strokeStyle = rgba(line.color, 1);
+          ctx.beginPath(); ctx.arc(stop.x, stop.y, 6 + near * 4, 0, 6.2832); ctx.fill(); ctx.stroke();
+          if (near > 0.15) {
+            ctx.fillStyle = rgba(ink, 1);
+            ctx.globalAlpha = Math.min(1, near * 1.5);
+            ctx.fillText(stop.name, stop.x + 14, stop.y - 10);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.lineCap = "butt";
+    }
+
+    function frame(now) {
+      raf = 0;
+      if (dark) drawLife(now); else drawMetro(now);
+      ctx.globalAlpha = 1;
+      if (live && !document.hidden) raf = requestAnimationFrame(frame);
+    }
+    const wake = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const repaint = () => { lifeDirty = true; wake(); };
+
+    readColors(); size(); wake();
+    onTheme = () => { readColors(); repaint(); };
+    addEventListener("resize", () => { size(); repaint(); });
+    document.addEventListener("visibilitychange", wake);
+    addEventListener("pointermove", (e) => { mx = e.clientX; my = e.clientY; if (!live) repaint(); }, { passive: true });
+    document.documentElement.addEventListener("pointerleave", () => { mx = my = -9999; repaint(); });
+    addEventListener("pointerdown", (e) => {
+      if (root.classList.contains("has-sheet") || !dark) return;
+      seed(e.clientX, e.clientY, 4);
+      wake();
+    }, { passive: true });
   }
 
   // Un trait sous la barre du haut dès qu'on a fait défiler la page

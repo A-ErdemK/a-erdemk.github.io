@@ -1,54 +1,58 @@
-/* Portfolio d'Erdem Kurac. Fond bleu nuit vivant, cartes de projets, fiche en panneau glissant. */
+/* Portfolio d'Erdem Kurac. Thème sombre « Labo » (le jeu de la vie en fond),
+   thème clair « Métro » (un plan de lignes de métro en fond). */
 
 /* ---------- Couleurs ---------- */
 
+/* Labo : graphite et vert acide */
 :root, [data-theme="dark"] {
-  --bg: #0D1033;
-  --bg-2: #141848;
-  --surface: #161A4D;
-  --surface-2: #1E2360;
-  --ink: #EEF0FF;
-  --ink-2: #A6ABDB;
-  --line: rgba(238, 240, 255, 0.12);
-  --accent: #6EE7F9;
-  --accent-ink: #6EE7F9;
-  --dot: 166, 171, 219;
-  --dot-hi: 110, 231, 249;
-  --accent-2: #2DD4BF;
-  --on-accent: #0D1033;
-  --primary: #EEF0FF;
-  --on-primary: #12154A;
-  --shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 20px 50px rgba(3, 5, 25, 0.45);
-  --glow: rgba(110, 231, 249, 0.16);
+  --bg: #111312;
+  --bg-2: #161917;
+  --surface: #191C1A;
+  --surface-2: #222622;
+  --ink: #ECF2E8;
+  --ink-2: #A3AD9E;
+  --line: rgba(236, 242, 232, 0.12);
+  --accent: #B8F34A;
+  --accent-ink: #B8F34A;
+  --accent-2: #B8F34A;
+  --dot: 120, 130, 115;
+  --dot-hi: 184, 243, 74;
+  --primary: #B8F34A;
+  --on-primary: #111312;
+  --live: #B8F34A;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 50px rgba(0, 0, 0, 0.45);
+  --glow: rgba(184, 243, 74, 0.14);
+  --radius: 12px;
   color-scheme: dark;
 }
+/* Métro : signalétique de transport, blanc et pastilles de couleur */
 [data-theme="light"] {
-  --bg: #E9ECFF;
-  --bg-2: #DFE3FF;
+  --bg: #F7F7F5;
+  --bg-2: #F7F7F5;
   --surface: #FFFFFF;
-  --surface-2: #F3F4FF;
-  --ink: #14174A;
-  --ink-2: #4C5185;
-  --line: rgba(20, 23, 74, 0.11);
-  --accent: #0E7C93;
-  --accent-ink: #0B6377;
-  --dot: 40, 46, 120;
-  --dot-hi: 14, 124, 147;
-  --accent-2: #0F9F8C;
-  --on-accent: #FFFFFF;
-  --primary: #14174A;
+  --surface-2: #EFEFEC;
+  --ink: #111111;
+  --ink-2: #4B4B4B;
+  --line: rgba(17, 17, 17, 0.12);
+  --accent: #0055A4;
+  --accent-ink: #0055A4;
+  --accent-2: #0055A4;
+  --dot: 17, 17, 17;
+  --dot-hi: 227, 0, 27;
+  --primary: #111111;
   --on-primary: #FFFFFF;
-  --shadow: 0 1px 3px rgba(20, 23, 74, 0.06), 0 18px 40px rgba(20, 23, 74, 0.08);
-  --glow: rgba(14, 124, 147, 0.12);
+  --live: #00A651;
+  --shadow: 0 8px 24px rgba(17, 17, 17, 0.08);
+  --glow: rgba(0, 85, 164, 0.10);
+  --radius: 16px;
   color-scheme: light;
 }
 :root {
   --sans: "Geist", "Segoe UI", system-ui, sans-serif;
-  --display: "Unbounded", "Geist", system-ui, sans-serif;
+  --display: "Bricolage Grotesque", "Geist", system-ui, sans-serif;
   --mono: "Geist Mono", ui-monospace, Consolas, monospace;
   --wrap: 1280px;
   --pad: clamp(16px, 4vw, 48px);
-  --live: #2DD4BF;
 }
 
 /* ---------- Base ---------- */
@@ -71,7 +75,7 @@ p { text-wrap: pretty; }
 .skip { position: absolute; left: 12px; top: -80px; z-index: 100; padding: 10px 14px; border-radius: 10px; background: var(--primary); color: var(--on-primary); font-weight: 600; }
 .skip:focus { top: 12px; }
 
-/* Grille de points en fond (dessinée par main.js) */
+/* Fond animé (dessiné par main.js) */
 .matrix { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
 
 /* ---------- Boutons ---------- */
@@ -116,7 +120,7 @@ p { text-wrap: pretty; }
 .intro__lead { max-width: 36rem; margin-top: 8px; color: var(--ink-2); font-size: 1.0625rem; }
 .intro, .intro > * { animation: monte 500ms ease-out both; }
 
-.ticket { position: relative; padding: 20px 22px; border: 1px solid var(--line); border-radius: 18px; background: color-mix(in srgb, var(--surface) 82%, transparent); box-shadow: var(--shadow); overflow: hidden; }
+.ticket { position: relative; padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--surface) 82%, transparent); box-shadow: var(--shadow); overflow: hidden; }
 .ticket__kicker { color: var(--ink-2); font-size: 0.875rem; }
 .ticket__what { margin-top: 2px; font: 600 1.15rem/1.3 var(--display); letter-spacing: -0.01em; }
 .ticket__when { margin-top: 4px; color: var(--accent-ink); font: 500 0.9375rem var(--mono); }
@@ -136,8 +140,8 @@ p { text-wrap: pretty; }
 
 .tag { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid var(--line); border-radius: 7px; color: var(--ink-2); font: 500 0.75rem/1.5 var(--mono); white-space: nowrap; }
 .tag--demo { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
-.tag--live { color: var(--ink); border-color: rgba(45, 212, 191, 0.5); }
-.live { width: 7px; height: 7px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2); }
+.tag--live { color: var(--ink); border-color: color-mix(in srgb, var(--live) 55%, transparent); }
+.live { width: 7px; height: 7px; border-radius: 50%; background: var(--live); box-shadow: 0 0 0 3px color-mix(in srgb, var(--live) 22%, transparent); }
 
 .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
 .grid__item { animation: monte 450ms ease-out both; }
@@ -150,7 +154,7 @@ p { text-wrap: pretty; }
 .card {
   --mx: 50%; --my: 0%;
   position: relative; display: flex; flex-direction: column; height: 100%;
-  border: 1px solid var(--line); border-radius: 18px; background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--surface) 88%, transparent);
   text-decoration: none; overflow: hidden; isolation: isolate;
   transition: transform 250ms ease-out, box-shadow 250ms ease-out;
 }
@@ -176,10 +180,10 @@ p { text-wrap: pretty; }
 
 /* Visuels dessinés pour les projets sans capture */
 .viz { position: absolute; inset: 0; width: 100%; height: 100%; }
-.viz--branches { display: grid; align-content: center; gap: 12px; padding: 18px 18px 18px 46px; background: linear-gradient(140deg, #0B3A3C, #0E5B57); color: #D7FBF4; }
-.viz--branches::before { content: ""; position: absolute; left: 26px; top: 16px; bottom: 16px; width: 2px; background: rgba(94, 234, 212, 0.45); }
+.viz--branches { display: grid; align-content: center; gap: 12px; padding: 18px 18px 18px 46px; background: var(--surface-2); color: var(--accent-ink); }
+.viz--branches::before { content: ""; position: absolute; left: 26px; top: 16px; bottom: 16px; width: 2px; background: currentColor; opacity: 0.45; }
 .viz--branches code { position: relative; font-size: 0.8125rem; }
-.viz--branches code::before { content: ""; position: absolute; left: -26px; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; border: 2px solid #5EEAD4; background: #0B3A3C; }
+.viz--branches code::before { content: ""; position: absolute; left: -26px; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; border: 2px solid currentColor; background: var(--surface-2); }
 .viz--ci { display: grid; grid-template-columns: repeat(3, 1fr); align-content: center; gap: 8px; padding: 18px; background: #0F1620; }
 .viz--ci i { display: flex; align-items: center; gap: 6px; height: 22px; padding: 0 7px; border: 1px solid rgba(230, 237, 243, 0.14); border-radius: 6px; background: #151E29; }
 .viz--ci i::before { content: ""; width: 8px; height: 8px; flex: none; border-radius: 50%; background: #3FB950; }
@@ -193,7 +197,7 @@ p { text-wrap: pretty; }
 /* ---------- Parcours ---------- */
 
 .path { padding-top: clamp(56px, 8vw, 88px); }
-.path__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 56px); margin-top: 20px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line); border-radius: 18px; background: color-mix(in srgb, var(--surface) 82%, transparent); }
+.path__grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 56px); margin-top: 20px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line); border-radius: var(--radius); background: color-mix(in srgb, var(--surface) 82%, transparent); }
 .timeline { align-self: start; margin: 0; padding: 0; list-style: none; border-left: 2px solid var(--line); }
 .timeline li { position: relative; padding: 0 0 1.5rem 1.4rem; }
 .timeline li:last-child { padding-bottom: 0; }
@@ -274,7 +278,6 @@ p { text-wrap: pretty; }
 .ico--prestige { background: #2C3E50; }
 .ico--pipeline { background: #0F766E; }
 .ico--bot { background: #5E6B7E; }
-.ico--contact { background: var(--accent); color: var(--on-accent) !important; }
 
 /* ---------- Démos : chacune garde les couleurs de sa propre application ---------- */
 
@@ -451,3 +454,12 @@ p { text-wrap: pretty; }
   .card:hover, .btn:hover { transform: none; }
   .card:hover .card__visual img { transform: none; }
 }
+
+
+/* Bricolage se lit mieux en gras */
+:is(.top__name, .intro h1, .ticket__what, .projects h2, .path h2, .contact h2, .card__title, .detail h2) { font-weight: 700; }
+
+/* ---------- Détails propres au thème clair « Métro » ---------- */
+
+[data-theme="light"] :is(.btn, .filters, .filters button, .top__nav, .top__nav a, .tag, .icon-btn, .sheet__close) { border-radius: 999px; }
+[data-theme="light"] .ticket__when { display: inline-block; padding: 1px 10px; border-radius: 999px; background: #FFBE00; color: #111111; }

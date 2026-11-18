@@ -7,9 +7,8 @@ Site statique fait main (HTML, CSS, JavaScript, sans framework ni étape de buil
 ## Comment il est fait
 
 - Une seule page : présentation, carte de stage, projets, parcours, contact.
-- Le fond est une grille de points dessinée dans un `<canvas>` : elle s'éclaire autour de la souris, une vague la traverse et chaque clic lance une onde. Elle reste fixe sur téléphone et quand le système demande moins d'animations.
+- Deux thèmes, selon l'ordinateur du visiteur ou le bouton en haut : « Labo » en sombre, avec le jeu de la vie de Conway en fond (la souris sème des cellules, un clic en lâche une poignée), et « Métro » en clair, avec un plan de lignes de métro dont les stations portent le nom des projets. Le fond est dessiné dans un `<canvas>`, se met en pause quand l'onglet est caché et reste fixe si le système demande moins d'animations.
 - Les projets sont des cartes. Un clic ouvre la fiche dans un panneau (`<dialog>`) qui glisse depuis la droite. Chaque fiche a sa propre adresse (`#portail`, `#echecs`…) et le bouton retour du navigateur la referme.
-- Thème clair ou sombre selon l'ordinateur du visiteur, avec un bouton pour changer.
 
 Quatre projets ont une démo qui marche dans la page :
 
@@ -38,4 +37,4 @@ Puis ouvrir http://localhost:8000.
 
 ## Crédits
 
-chess.js (licence BSD-2, `assets/vendor/chess.js.LICENSE.txt`). Pièces d'échecs reprises du projet SAE 3.01. Polices Geist, Geist Mono et Unbounded (Google Fonts).
+chess.js (licence BSD-2, `assets/vendor/chess.js.LICENSE.txt`). Pièces d'échecs reprises du projet SAE 3.01. Polices Geist, Geist Mono et Bricolage Grotesque (Google Fonts).
