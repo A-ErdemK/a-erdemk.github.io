@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Erdem Kurac, développeur</title>
+  <meta name="description" content="Erdem Kurac, étudiant en 3e année de BUT Informatique à Orléans. Applications web de bout en bout, sécurité, CI/CD. Je cherche un stage.">
+  <meta name="theme-color" content="#F1F3F6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0E1524" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://a-erdemk.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://a-erdemk.github.io/">
+  <meta property="og:title" content="Erdem Kurac, développeur">
+  <meta property="og:description" content="Un an de projets, une branche par projet. Je cherche un stage.">
+  <meta property="og:image" content="https://a-erdemk.github.io/assets/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    // Applique le thème choisi avant l'affichage pour éviter un flash
+    try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#projets">Aller aux projets</a>
+
+  <header class="top">
+    <a class="top__name" href="#">Erdem Kurac</a>
+    <nav class="top__nav" aria-label="Sections">
+      <a href="#projets">Projets</a>
+      <a href="#competences">Compétences</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="theme" type="button" aria-label="Passer en thème sombre" data-theme-toggle>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></svg>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-titre">
+      <h1 id="hero-titre" class="hero__name"><span>Erdem</span> <span>Kurac</span></h1>
+      <div class="hero__intro">
+        <p class="hero__lead">Développeur, en 3e année de BUT Informatique à Orléans. Je construis des applications web de bout en bout, je les sécurise et j'automatise ce qui peut l'être.</p>
+        <p class="hero__status">Je cherche un stage de fin d'études.</p>
+        <div class="hero__actions">
+          <a class="btn btn--solid" href="#projets">Voir mes projets</a>
+          <a class="btn" href="mailto:kuracerdem@gmail.com">M'écrire</a>
+        </div>
+      </div>
+
+      <figure class="map">
+        <div class="map__canvas" data-map aria-hidden="true"></div>
+        <figcaption class="map__caption">Mes projets depuis septembre 2025 : chaque branche est un projet, fusionnée dans <code>main</code> une fois rendue. Cliquez sur une branche pour l'ouvrir.</figcaption>
+        <ol class="map__list">
+          <li style="--c: var(--c-jura)"><a href="#jurassique">Le Parc du Jurassique</a></li>
+          <li style="--c: var(--c-echecs)"><a href="#echecs">Échecs en réseau chiffré</a></li>
+          <li style="--c: var(--c-prestige)"><a href="#prestige">Prestige Auto</a></li>
+          <li style="--c: var(--c-portail)"><a href="#portail">Portail Infra</a></li>
+          <li style="--c: var(--c-cicd)"><a href="#cicd">Chaîne CI/CD</a></li>
+          <li style="--c: var(--c-bot)"><a href="#bot">Robot de trading</a></li>
+        </ol>
+      </figure>
+    </section>
+
+    <section id="projets" class="projects" aria-labelledby="projets-titre">
+      <h2 id="projets-titre" class="section-title">Projets</h2>
+      <p class="section-intro">Du plus ancien au plus récent. Le code de ces projets est privé pour l'instant : je le montre volontiers en entretien.</p>
+
+      <!-- Pour ajouter un projet : copier un <article>, changer l'id, les data-* et le contenu. La carte du haut se met à jour seule. -->
+
+      <article id="jurassique" class="project" data-name="Le Parc du Jurassique" data-start="2025-09-08" data-end="2025-12-15" style="--c: var(--c-jura)">
+        <div class="project__graph" aria-hidden="true"></div>
+        <div class="project__body">
+          <p class="project__ref"><code>sae/parc-jurassique</code></p>
+          <h3 class="project__title">Le Parc du Jurassique</h3>
+          <p class="project__pitch">Application web de gestion pour un laboratoire de paléontologie fictif : matériel, personnel, campagnes de fouilles, budget, et analyse de séquences ADN importées.</p>
+          <dl class="project__meta">
+            <div><dt>Contexte</dt><dd>SAE, équipe de 4</dd></div>
+            <div><dt>Quand</dt><dd>sept. → déc. 2025</dd></div>
+            <div><dt>Mon apport</dt><dd>95 commits sur 222</dd></div>
+          </dl>
+          <ul class="project__points">
+            <li>Back-end Flask et SQLAlchemy sur MySQL, comptes et rôles avec Flask-Login.</li>
+            <li>Import de fichiers <code>.adn</code> d'un million de bases, avec calcul de la composition et aperçu de la séquence.</li>
+            <li>Tests Pytest, travail en branches et revues de pull requests (72 fusionnées).</li>
+          </ul>
+          <p class="project__stack">Flask, SQLAlchemy, MySQL, Jinja, Pytest</p>
+        </div>
+        <figure class="project__shot">
+          <img src="assets/img/jurassique.webp" width="1200" height="606" loading="lazy" decoding="async" alt="Page d'analyse d'un échantillon ADN : composition en bases A, C, G, T et aperçu de la séquence.">
+        </figure>
+        <p class="project__merge"><code>Merge pull request #72</code></p>
+      </article>
+
+      <article id="echecs" class="project" data-name="Échecs en réseau" data-start="2025-12-04" data-end="2026-01-25" style="--c: var(--c-echecs)">
+        <div class="project__graph" aria-hidden="true"></div>
+        <div class="project__body">
+          <p class="project__ref"><code>sae/echecs-reseau</code></p>
+          <h3 class="project__title">Échecs en réseau chiffré</h3>
+          <p class="project__pitch">Un jeu d'échecs complet, en local ou en ligne contre un autre joueur, où tout ce qui passe sur le réseau est chiffré.</p>
+          <dl class="project__meta">
+            <div><dt>Contexte</dt><dd>SAE, équipe de 4</dd></div>
+            <div><dt>Quand</dt><dd>déc. 2025 → janv. 2026</dd></div>
+            <div><dt>Mon rôle</dt><dd>Architecture réseau</dd></div>
+          </dl>
+          <ul class="project__points">
+            <li>Serveur client-serveur en sockets : mise en relation automatique des joueurs et plusieurs parties en même temps.</li>
+            <li>Échange de clés ECDH puis chiffrement AES-GCM de chaque message.</li>
+            <li>Comptes joueurs aux mots de passe hachés, historique des parties, règles complètes avec python-chess.</li>
+          </ul>
+          <p class="project__stack">Python, Pygame, sockets, cryptography, SQLite, Pytest</p>
+        </div>
+        <figure class="project__shot project__shot--square">
+          <img src="assets/img/echecs.webp" width="900" height="897" loading="lazy" decoding="async" alt="Échiquier de l'application après le premier coup des blancs.">
+        </figure>
+        <p class="project__merge"><code>Merge pull request #22</code></p>
+      </article>
+
+      <article id="prestige" class="project" data-name="Prestige Auto" data-start="2026-03-17" data-end="2026-04-03" style="--c: var(--c-prestige)">
+        <div class="project__graph" aria-hidden="true"></div>
+        <div class="project__body">
+          <p class="project__ref"><code>web/prestige-auto</code></p>
+          <h3 class="project__title">Prestige Auto</h3>
+          <p class="project__pitch">Le catalogue d'un garage de voitures d'exception, en application d'une seule page écrite en JavaScript natif, sans framework.</p>
+          <dl class="project__meta">
+            <div><dt>Contexte</dt><dd>Module web, en binôme</dd></div>
+            <div><dt>Quand</dt><dd>mars → avril 2026</dd></div>
+            <div><dt>Mon apport</dt><dd>22 commits sur 29</dd></div>
+          </dl>
+          <ul class="project__points">
+            <li>Routeur maison sur le hash de l'URL et vues en classes (rendu, puis branchement des événements).</li>
+            <li>Catalogue paginé avec recherche et filtres, fiche détaillée, avis sur les vendeurs, favoris gardés dans le navigateur.</li>
+            <li>Images chargées à l'affichage avec IntersectionObserver, version finale empaquetée avec Rollup.</li>
+          </ul>
+          <p class="project__stack">JavaScript, json-server, Rollup</p>
+        </div>
+        <figure class="project__shot">
+          <img src="assets/img/prestige-auto.webp" width="1200" height="758" loading="lazy" decoding="async" alt="Accueil de Prestige Auto Orléans avec les dernières voitures arrivées.">
+        </figure>
+        <p class="project__merge"><code>Merge branch 'develop'</code></p>
+      </article>
+
+      <article id="portail" class="project project--major" data-name="Portail Infra" data-start="2026-04-07" data-end="2026-06-01" style="--c: var(--c-portail)">
+        <div class="project__graph" aria-hidden="true"></div>
+        <div class="project__body">
+          <p class="project__ref"><code>stage/portail-infra</code></p>
+          <h3 class="project__title">Portail Infra</h3>
+          <p class="project__pitch">Mon stage au Centre Hospitalier de Gien : une application interne qui range les comptes techniques des serveurs par service, contrôle qui peut les voir et garde une trace de chaque action sensible.</p>
+          <dl class="project__meta">
+            <div><dt>Contexte</dt><dd>Stage, seul développeur</dd></div>
+            <div><dt>Quand</dt><dd>avril → juin 2026</dd></div>
+            <div><dt>Volume</dt><dd>65 commits, 13 pull requests</dd></div>
+          </dl>
+          <ul class="project__points">
+            <li>Connexion par l'annuaire LDAP de l'hôpital, avec une base locale en secours, puis jeton JWT.</li>
+            <li>Trois rôles (administrateur, technicien, lecteur) et des droits par service.</li>
+            <li>Mots de passe des comptes chiffrés en AES, affichés seulement à la demande, chaque lecture étant inscrite au journal d'audit.</li>
+            <li>API Flask testée (14 fichiers de tests), interface Vue 3, le tout lancé avec Docker Compose.</li>
+          </ul>
+          <p class="project__stack">Vue 3, Flask, MySQL, OpenLDAP, JWT, Docker</p>
+        </div>
+        <figure class="project__shot">
+          <img src="assets/img/portail-infra.webp" width="1200" height="637" loading="lazy" decoding="async" alt="Écran Infrastructure serveurs du Portail Infra : six serveurs avec leur environnement, leur système et des boutons Comptes, Modifier, Supprimer. Les adresses IP sont floutées.">
+          <figcaption>Données de démonstration, adresses IP floutées.</figcaption>
+        </figure>
+        <p class="project__merge"><code>Merge pull request #13</code></p>
+      </article>
+
+      <article id="cicd" class="project" data-name="Chaîne CI/CD" data-start="2026-09-07" data-end="2026-10-12" style="--c: var(--c-cicd)">
+        <div class="project__graph" aria-hidden="true"></div>
+        <div class="project__body">
+          <p class="project__ref"><code>tp/ci-cd</code></p>
+          <h3 class="project__title">Chaîne CI/CD</h3>
+          <p class="project__pitch">Une application de tâches (React, .NET, MariaDB) que j'ai rendue livrable automatiquement : à chaque push, elle est vérifiée, testée, scannée, puis déployée.</p>
+          <dl class="project__meta">
+            <div><dt>Contexte</dt><dd>Module automatisation, BUT 3</dd></div>
+            <div><dt>Quand</dt><dd>sept. → oct. 2026</dd></div>
+            <div><dt>Résultat</dt><dd>Build de 3 min 40 à 48 s</dd></div>
+          </dl>
+          <ul class="project__points">
+            <li>Images Docker optimisées (ordre des couches, cache des dépendances), front servi par Nginx en reverse proxy.</li>
+            <li>Workflow GitHub Actions : lint, tests xUnit et Vitest, tests d'intégration avec Testcontainers, seuil de couverture.</li>
+            <li>Scan de vulnérabilités Trivy, publication de l'image, déploiement sur une machine virtuelle par SSH avec le SHA du commit, test de fumée à la fin.</li>
+          </ul>
+          <p class="project__stack">GitHub Actions, Docker, .NET, React, Trivy</p>
+        </div>
+        <figure class="project__shot project__shot--diagram">
+          <ol class="pipe" aria-label="Étapes de la chaîne">
+            <li><span>push</span></li>
+            <li><span>lint</span></li>
+            <li><span>tests</span></li>
+            <li><span>build</span></li>
+            <li><span>scan Trivy</span></li>
+            <li><span>publication</span></li>
+            <li><span>déploiement</span></li>
+            <li><span>test de fumée</span></li>
+          </ol>
+        </figure>
+        <p class="project__merge"><code>Merge pull request #12</code></p>
+      </article>
+
+      <article id="bot" class="project project--minor" data-name="Robot de trading" data-start="2026-10-21" data-end="2026-10-21" style="--c: var(--c-bot)">
+        <div class="project__graph" aria-hidden="true"></div>
+        <div class="project__body">
+          <p class="project__ref"><code>perso/robot-mt5</code></p>
+          <h3 class="project__title">Robot de trading</h3>
+          <p class="project__pitch">À côté des cours : un Expert Advisor MetaTrader 5 en MQL5, et des scripts Python pour analyser ses backtests.</p>
+          <p class="project__stack">MQL5, Python</p>
+        </div>
+      </article>
+
+      <div class="next" aria-hidden="true">
+        <div class="project__graph project__graph--open"></div>
+      </div>
+    </section>
+
+    <section id="competences" class="skills" aria-labelledby="competences-titre">
+      <h2 id="competences-titre" class="section-title">Compétences</h2>
+      <div class="skills__grid">
+        <dl class="skills__list">
+          <div>
+            <dt>Back-end</dt>
+            <dd>Python avec Flask et Django, C# avec .NET, Java. API REST, authentification JWT et LDAP.<span class="seen">Voir <a href="#portail">Portail Infra</a>, <a href="#jurassique">Parc du Jurassique</a></span></dd>
+          </div>
+          <div>
+            <dt>Front-end</dt>
+            <dd>Vue 3, React, JavaScript sans framework, TypeScript, HTML et CSS. Flutter pour le mobile.<span class="seen">Voir <a href="#prestige">Prestige Auto</a>, <a href="#portail">Portail Infra</a></span></dd>
+          </div>
+          <div>
+            <dt>Données</dt>
+            <dd>MySQL, PostgreSQL, Oracle, SQLite. Modélisation, requêtes, triggers.<span class="seen">Voir <a href="#jurassique">Parc du Jurassique</a></span></dd>
+          </div>
+          <div>
+            <dt>Sécurité</dt>
+            <dd>Chiffrement AES et ECDH, mots de passe hachés, journal d'audit, scan de vulnérabilités.<span class="seen">Voir <a href="#echecs">Échecs en réseau</a>, <a href="#portail">Portail Infra</a></span></dd>
+          </div>
+          <div>
+            <dt>Livraison</dt>
+            <dd>Git en équipe (branches, pull requests, revues), Docker, GitHub Actions, tests automatisés.<span class="seen">Voir <a href="#cicd">Chaîne CI/CD</a></span></dd>
+          </div>
+        </dl>
+        <div class="path">
+          <h3 class="path__title">Parcours</h3>
+          <ol class="path__list">
+            <li><time datetime="2024">2024 → 2027</time><span>BUT Informatique, IUT d'Orléans</span></li>
+            <li><time datetime="2026-04">avril → juin 2026</time><span>Stage de développeur, Centre Hospitalier de Gien</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" aria-labelledby="contact-titre">
+      <div class="project__graph project__graph--invite" aria-hidden="true"></div>
+      <h2 id="contact-titre" class="contact__title">La prochaine branche peut s'ouvrir chez vous.</h2>
+      <p class="contact__text">Je cherche un stage pour terminer mon BUT. Si mes projets vous parlent, écrivez-moi : je réponds vite.</p>
+      <div class="contact__actions">
+        <a class="btn btn--solid" href="mailto:kuracerdem@gmail.com">M'écrire</a>
+        <button class="btn" type="button" data-copy="kuracerdem@gmail.com">Copier l'adresse e-mail</button>
+        <p class="toast" role="status" aria-live="polite" data-toast></p>
+      </div>
+      <ul class="contact__links">
+        <li><a href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a></li>
+        <li><a href="https://github.com/A-ErdemK" rel="me">GitHub</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Site fait à la main, en HTML, CSS et JavaScript, hébergé sur GitHub Pages.</p>
+  </footer>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
