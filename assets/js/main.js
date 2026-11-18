@@ -1,52 +1,24 @@
-// Graphe Git du portfolio : la carte du haut et une branche par projet.
-// Les projets sont lus dans le HTML (balises <article class="project">), rien à modifier ici pour en ajouter un.
+// Portfolio d'Erdem Kurac : choix du style, démos des projets, copie de l'e-mail.
 
 const root = document.documentElement;
-root.classList.add("js");
+const pad = (n) => String(n).padStart(2, "0");
+const now = () => { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
 
-const SVG = "http://www.w3.org/2000/svg";
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* ---------- Choix du style (provisoire, le temps de décider) ---------- */
 
-function el(name, attrs = {}, parent) {
-  const node = document.createElementNS(SVG, name);
-  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
-  if (parent) parent.appendChild(node);
-  return node;
+const pickers = document.querySelectorAll("[data-pick]");
+function setStyle(name) {
+  root.dataset.style = name;
+  pickers.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.pick === name)));
+  try { localStorage.setItem("style", name); } catch (e) { /* stockage indisponible */ }
 }
-
-function cssNumber(name, fallback) {
-  const v = parseFloat(getComputedStyle(root).getPropertyValue(name));
-  return Number.isFinite(v) ? v : fallback;
-}
-
-/* ---------- Thème clair / sombre ---------- */
-
-const themeButton = document.querySelector("[data-theme-toggle]");
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-
-function currentTheme() {
-  return root.dataset.theme || (prefersDark.matches ? "dark" : "light");
-}
-
-function updateThemeLabel() {
-  const next = currentTheme() === "dark" ? "clair" : "sombre";
-  themeButton.setAttribute("aria-label", `Passer en thème ${next}`);
-}
-
-themeButton.addEventListener("click", () => {
-  const next = currentTheme() === "dark" ? "light" : "dark";
-  root.dataset.theme = next;
-  try { localStorage.setItem("theme", next); } catch (e) { /* stockage indisponible */ }
-  updateThemeLabel();
-});
-prefersDark.addEventListener("change", updateThemeLabel);
-updateThemeLabel();
+pickers.forEach((b) => b.addEventListener("click", () => setStyle(b.dataset.pick)));
+setStyle(root.dataset.style || "nuit");
 
 /* ---------- Copier l'adresse e-mail ---------- */
 
 const toast = document.querySelector("[data-toast]");
 let toastTimer;
-
 document.querySelectorAll("[data-copy]").forEach((button) => {
   button.addEventListener("click", async () => {
     const text = button.dataset.copy;
@@ -57,186 +29,186 @@ document.querySelectorAll("[data-copy]").forEach((button) => {
       toast.textContent = `Copie impossible ici. Mon adresse : ${text}`;
     }
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { toast.textContent = ""; }, 4000);
+    toastTimer = setTimeout(() => { toast.textContent = ""; }, 5000);
   });
 });
 
-/* ---------- Une branche par projet ---------- */
+/* ---------- Démo Portail Infra : rôles, mot de passe, journal d'audit ---------- */
 
-function centerY(child, article) {
-  if (!child) return null;
-  const a = article.getBoundingClientRect();
-  const c = child.getBoundingClientRect();
-  return c.top - a.top + c.height / 2;
+const portail = document.querySelector(".demo--portail");
+if (portail) {
+  const roles = portail.querySelectorAll("[data-role]");
+  const reveal = portail.querySelector("[data-reveal]");
+  const pwd = portail.querySelector("[data-pwd]");
+  const why = portail.querySelector("[data-why]");
+  const audit = portail.querySelector("[data-audit]");
+  const HIDDEN = "••••••••••••";
+  let role = "Administrateur";
+
+  const log = (text) => {
+    const li = document.createElement("li");
+    li.className = "is-new";
+    const time = document.createElement("time");
+    time.textContent = now();
+    const span = document.createElement("span");
+    span.textContent = text;
+    li.append(time, span);
+    audit.prepend(li);
+    while (audit.children.length > 5) audit.lastElementChild.remove();
+  };
+
+  const hide = () => {
+    pwd.textContent = HIDDEN;
+    reveal.textContent = "Afficher le mot de passe";
+    reveal.setAttribute("aria-pressed", "false");
+  };
+
+  roles.forEach((button) => button.addEventListener("click", () => {
+    if (button.dataset.role === role) return;
+    role = button.dataset.role;
+    roles.forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+    hide();
+    const reader = role === "Lecteur";
+    reveal.disabled = reader;
+    why.textContent = reader ? "Un lecteur voit la liste des comptes, jamais leurs mots de passe." : "";
+    log(`${role} s'est connecté par LDAP`);
+  }));
+
+  reveal.addEventListener("click", () => {
+    if (reveal.getAttribute("aria-pressed") === "true") { hide(); return; }
+    pwd.textContent = "Demo-Sauvegarde-26";
+    reveal.textContent = "Masquer";
+    reveal.setAttribute("aria-pressed", "true");
+    log(`${role} a affiché le mot de passe de svc_sauvegarde`);
+  });
 }
 
-function drawProjectGraph(box) {
-  const article = box.parentElement;
-  const w = box.clientWidth;
-  const h = box.clientHeight;
-  const xm = cssNumber("--x-main", 12);
-  const xb = cssNumber("--x-branch", 42);
-  box.replaceChildren();
-  const svg = el("svg", { viewBox: `0 0 ${w} ${h}`, focusable: "false" }, box);
+/* ---------- Démo Échecs : coup joué puis chiffré pour de vrai (ECDH + AES-GCM) ---------- */
 
-  // Branche ouverte à la fin : main continue en pointillés vers le contact
-  if (box.classList.contains("project__graph--open")) {
-    el("line", { x1: xm, y1: 0, x2: xm, y2: h * 0.45, class: "g-main" }, svg);
-    el("line", { x1: xm, y1: h * 0.45, x2: xm, y2: h, class: "g-main g-dash" }, svg);
-    return;
+const board = document.querySelector("[data-board]");
+if (board) {
+  const PIECES = { r: "rook", n: "knight", b: "bishop", q: "queen", k: "king", p: "pawn" };
+  const NOMS = { r: "tour", n: "cavalier", b: "fou", q: "dame", k: "roi", p: "pion" };
+  const START = ["rnbqkbnr", "pppppppp", "        ", "        ", "        ", "        ", "PPPPPPPP", "RNBQKBNR"];
+  const FILES = "abcdefgh";
+  const plain = document.querySelector("[data-plain]");
+  const cipher = document.querySelector("[data-cipher]");
+  const squares = [];
+  let selected = null;
+
+  const isWhite = (code) => code && code === code.toUpperCase();
+
+  function place(square, code) {
+    square.dataset.piece = code || "";
+    square.replaceChildren();
+    const name = square.dataset.sq;
+    if (!code) { square.setAttribute("aria-label", `Case ${name}, vide`); return; }
+    const color = isWhite(code) ? "white" : "black";
+    const img = document.createElement("img");
+    img.src = `assets/img/pieces/${color}-${PIECES[code.toLowerCase()]}.png`;
+    img.alt = "";
+    img.draggable = false;
+    square.appendChild(img);
+    square.setAttribute("aria-label", `Case ${name}, ${NOMS[code.toLowerCase()]} ${isWhite(code) ? "blanc" : "noir"}`);
   }
 
-  // Contact : une branche pas encore créée, en pointillés, qui part vers le titre
-  if (box.classList.contains("project__graph--invite")) {
-    const title = box.parentElement.querySelector(".contact__title");
-    const yt = title ? title.offsetTop + Math.min(48, title.offsetHeight / 2) : 140;
-    el("line", { x1: xm, y1: 0, x2: xm, y2: yt + 60, class: "g-main g-dash" }, svg);
-    el("path", { d: `M${xm} ${yt - 40} C${xm} ${yt - 16} ${xb} ${yt - 28} ${xb} ${yt}`, class: "g-branch g-dash" }, svg);
-    el("line", { x1: xb, y1: yt, x2: w, y2: yt, class: "g-tick" }, svg);
-    el("circle", { cx: xm, cy: yt - 40, r: 5, class: "g-node" }, svg);
-    el("circle", { cx: xb, cy: yt, r: 7, class: "g-open" }, svg);
-    return;
+  function setup() {
+    START.forEach((row, r) => [...row].forEach((code, c) => place(squares[r * 8 + c], code.trim())));
+    if (selected) selected.classList.remove("is-selected");
+    selected = null;
+    plain.textContent = "Cliquez sur une pièce blanche, puis sur une case.";
+    cipher.textContent = "Rien pour l'instant.";
   }
 
-  el("line", { x1: xm, y1: 0, x2: xm, y2: h, class: "g-main" }, svg);
-
-  const yFork = centerY(article.querySelector(".project__ref"), article) ?? 100;
-  const yMerge = centerY(article.querySelector(".project__merge"), article);
-  const open = yMerge === null;
-  const yEnd = open ? h - 56 : yMerge;
-  const bend = Math.min(36, (yEnd - yFork) / 3);
-
-  let d = `M${xm} ${yFork} C${xm} ${yFork + bend * 0.8} ${xb} ${yFork + bend * 0.2} ${xb} ${yFork + bend}`;
-  if (open) {
-    d += ` L${xb} ${yEnd}`;
-  } else {
-    d += ` L${xb} ${yEnd - bend} C${xb} ${yEnd - bend * 0.2} ${xm} ${yEnd - bend * 0.8} ${xm} ${yEnd}`;
-  }
-  el("path", { d, class: "g-branch" }, svg);
-
-  // Traits fins entre la branche et ses étiquettes
-  el("line", { x1: xb, y1: yFork, x2: w, y2: yFork, class: "g-tick" }, svg);
-  el("circle", { cx: xm, cy: yFork, r: 5, class: "g-node" }, svg);
-
-  if (open) {
-    el("circle", { cx: xb, cy: yEnd, r: 6, class: "g-open" }, svg);
-  } else {
-    el("line", { x1: xm, y1: yEnd, x2: w, y2: yEnd, class: "g-tick" }, svg);
-    el("circle", { cx: xm, cy: yEnd, r: 7.5, class: "g-merge" }, svg);
-  }
-}
-
-/* ---------- Carte de toutes les branches (hero) ---------- */
-
-const MOIS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
-const mapBox = document.querySelector("[data-map]");
-let mapDrawn = false;
-
-function drawMap() {
-  if (!mapBox) return;
-  const projects = [...document.querySelectorAll(".project[data-start]")];
-  const w = mapBox.clientWidth;
-  const narrow = w < 600;
-  const h = narrow ? 150 : 230;
-  const ym = h / 2 + (narrow ? 0 : -6);
-  const lift = narrow ? 34 : 58;
-  const padL = 6;
-  const padR = narrow ? 30 : 120;
-
-  const t0 = new Date("2025-09-01").getTime();
-  const t1 = new Date("2026-12-31").getTime();
-  const now = Math.min(Date.now(), t1);
-  const x = (date) => padL + ((new Date(date).getTime() - t0) / (t1 - t0)) * (w - padL - padR);
-
-  mapBox.replaceChildren();
-  const svg = el("svg", { viewBox: `0 0 ${w} ${h}`, focusable: "false" }, mapBox);
-  if (!mapDrawn && !reduceMotion) svg.classList.add("is-drawing");
-
-  // Repères d'années (masqués sur petit écran, faute de place)
-  for (const year of narrow ? [] : [2026]) {
-    const xy = x(`${year}-01-01`);
-    el("line", { x1: xy, y1: ym - 22, x2: xy, y2: ym + 22, class: "m-year" }, svg);
-    const t = el("text", { x: xy + 5, y: ym - 10, class: "lbl-date" }, svg);
-    t.textContent = String(year);
-  }
-  if (!narrow) {
-    const t25 = el("text", { x: padL, y: ym + 24, class: "lbl-date" }, svg);
-    t25.textContent = "2025";
-  }
-
-  // main : trait plein jusqu'à aujourd'hui, pointillés ensuite
-  const xNow = x(new Date(now).toISOString().slice(0, 10));
-  el("path", { d: `M${padL} ${ym} L${xNow} ${ym}`, class: "m-main draw", pathLength: 1 }, svg);
-  el("path", { d: `M${xNow} ${ym} L${w - 4} ${ym}`, class: "m-main m-future" }, svg);
-  el("circle", { cx: padL, cy: ym, r: 5, class: "g-node" }, svg);
-  if (!narrow) {
-    const tFut = el("text", { x: w - 4, y: ym - 14, class: "lbl-date", "text-anchor": "end" }, svg);
-    tFut.textContent = "prochain stage";
-  }
-
-  projects.forEach((article, i) => {
-    const up = i % 2 === 0;
-    const yb = up ? ym - lift : ym + lift;
-    const xs = x(article.dataset.start);
-    let xe = x(article.dataset.end);
-    const merged = article.querySelector(".project__merge") !== null;
-    const minLen = narrow ? 30 : 70;
-    if (xe - xs < minLen) xe = xs + minLen;
-    const k = Math.min(narrow ? 16 : 40, (xe - xs) / 2.4);
-    const color = getComputedStyle(article).getPropertyValue("--c").trim();
-
-    const link = el("a", { href: `#${article.id}`, tabindex: "-1" }, svg);
-    let d = `M${xs} ${ym} C${xs + k * 0.6} ${ym} ${xs + k * 0.4} ${yb} ${xs + k} ${yb}`;
-    d += merged
-      ? ` L${xe - k} ${yb} C${xe - k * 0.4} ${yb} ${xe - k * 0.6} ${ym} ${xe} ${ym}`
-      : ` L${xe} ${yb}`;
-    const path = el("path", { d, class: "br draw", pathLength: 1, style: `stroke:${color}` }, link);
-    path.style.animationDelay = `${0.55 + i * 0.16}s`;
-    // Zone cliquable plus large que le trait
-    el("path", { d, class: "br-hit" }, link);
-
-    el("circle", { cx: xs, cy: ym, r: 4.5, class: "g-node" }, link);
-    if (merged) el("circle", { cx: xe, cy: ym, r: 6, class: "g-merge", style: `stroke:${color}` }, link);
-    else el("circle", { cx: xe, cy: yb, r: 5, class: "g-open", style: `stroke:${color}` }, link);
-
-    if (!narrow) {
-      const mid = (xs + xe) / 2;
-      const ty = up ? yb - 30 : yb + 24;
-      const name = el("text", { x: mid, y: ty, "text-anchor": "middle", class: "lbl" }, link);
-      name.textContent = article.dataset.name;
-      const s = new Date(article.dataset.start);
-      const e = new Date(article.dataset.end);
-      const span = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()
-        ? `${MOIS[s.getMonth()]} ${s.getFullYear()}`
-        : `${MOIS[s.getMonth()]} → ${MOIS[e.getMonth()]} ${e.getFullYear()}`;
-      const date = el("text", { x: mid, y: ty + 15, "text-anchor": "middle", class: "lbl-date" }, link);
-      date.textContent = span;
-      name.style.animationDelay = date.style.animationDelay = `${0.75 + i * 0.16}s`;
-      name.classList.add("fade");
-      date.classList.add("fade");
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const square = document.createElement("button");
+      square.type = "button";
+      square.dataset.sq = FILES[c] + (8 - r);
+      if ((r + c) % 2) square.classList.add("is-dark");
+      board.appendChild(square);
+      squares.push(square);
     }
+  }
+  setup();
+
+  // Deux clés ECDH (vous et le serveur), puis une clé AES-GCM partagée
+  const keyReady = (async () => {
+    const curve = { name: "ECDH", namedCurve: "P-256" };
+    const you = await crypto.subtle.generateKey(curve, false, ["deriveKey"]);
+    const server = await crypto.subtle.generateKey(curve, false, ["deriveKey"]);
+    return crypto.subtle.deriveKey({ name: "ECDH", public: server.publicKey }, you.privateKey, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+  })();
+
+  const hex = (bytes) => [...new Uint8Array(bytes)].map((x) => x.toString(16).padStart(2, "0")).join("");
+
+  async function send(from, to, code) {
+    const message = JSON.stringify({ coup: `${from}-${to}`, piece: NOMS[code.toLowerCase()] });
+    plain.textContent = message;
+    try {
+      const key = await keyReady;
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const data = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(message));
+      cipher.textContent = hex(iv) + hex(data);
+    } catch (e) {
+      cipher.textContent = "Votre navigateur bloque le chiffrement sur cette page.";
+    }
+  }
+
+  board.addEventListener("click", (event) => {
+    const square = event.target.closest("button");
+    if (!square) return;
+    const code = square.dataset.piece;
+
+    // Choisir (ou changer de) pièce blanche
+    if (isWhite(code)) {
+      if (selected) selected.classList.remove("is-selected");
+      selected = selected === square ? null : square;
+      if (selected) selected.classList.add("is-selected");
+      return;
+    }
+    if (!selected) return;
+
+    const moving = selected.dataset.piece;
+    place(square, moving);
+    place(selected, "");
+    selected.classList.remove("is-selected");
+    send(selected.dataset.sq, square.dataset.sq, moving);
+    selected = null;
   });
 
-  mapDrawn = true;
+  document.querySelector("[data-reset]").addEventListener("click", setup);
 }
 
-/* ---------- Dessin et redessin ---------- */
+/* ---------- Démo Jurassique : composition d'un échantillon d'ADN ---------- */
 
-const graphs = [...document.querySelectorAll(".project__graph")];
+const dnaButton = document.querySelector("[data-dna]");
+if (dnaButton) {
+  const bars = document.querySelectorAll("[data-dna-bars] > div");
+  const seqOut = document.querySelector("[data-dna-seq]");
+  const fileOut = document.querySelector("[data-dna-file]");
+  let count = 0;
 
-function drawAll() {
-  graphs.forEach(drawProjectGraph);
-  drawMap();
+  dnaButton.addEventListener("click", () => {
+    const bases = "ACGT";
+    // Proportions légèrement différentes à chaque échantillon
+    const weights = [...bases].map(() => 0.8 + Math.random() * 0.4);
+    const total = weights.reduce((a, b) => a + b, 0);
+    let seq = "";
+    for (let i = 0; i < 1000; i++) {
+      let x = Math.random() * total;
+      let k = 0;
+      while (x > weights[k]) { x -= weights[k]; k++; }
+      seq += bases[k];
+    }
+    const counts = [...bases].map((b) => seq.split(b).length - 1);
+    bars.forEach((row, i) => {
+      row.querySelector("i").style.setProperty("--v", counts[i] / 1000);
+      row.querySelector("b").textContent = counts[i];
+    });
+    count += 1;
+    fileOut.textContent = `echantillon_${pad(count)}.adn, 1 000 bases`;
+    seqOut.textContent = seq.slice(0, 240) + "…";
+    dnaButton.textContent = "Importer un autre échantillon";
+  });
 }
-
-let resizeTimer;
-const observer = new ResizeObserver(() => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(drawAll, 60);
-});
-
-document.fonts.ready.then(() => {
-  drawAll();
-  observer.observe(document.querySelector(".projects"));
-  if (mapBox) observer.observe(mapBox);
-});

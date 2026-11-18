@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-style="nuit">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,19 +8,32 @@
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400..900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="/assets/css/style.css">
   <script>
-    try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    try { const s = localStorage.getItem("style"); if (s) document.documentElement.dataset.style = s; } catch (e) {}
   </script>
+  <style>
+    .lost { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+    .lost .app { width: min(560px, 100%); margin: 0; }
+    .lost__body { padding: 28px clamp(20px, 4vw, 36px) 32px; }
+    .lost h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); font-weight: 600; line-height: 1.1; }
+    .lost p { margin-top: 0.75rem; color: var(--ink-2); font-size: 1.0625rem; }
+    .lost .btn { margin-top: 1.5rem; }
+  </style>
 </head>
 <body>
-  <main class="contact lost">
-    <p class="project__ref"><code>fatal: branche introuvable</code></p>
-    <h1 class="contact__title">Cette page n'existe pas.</h1>
-    <p class="contact__text">Le lien est peut-être ancien ou mal recopié. Tout le reste est sur la page d'accueil.</p>
-    <div class="contact__actions">
-      <a class="btn btn--solid" href="/">Revenir à l'accueil</a>
+  <main class="lost">
+    <div class="app">
+      <div class="app__bar">
+        <span class="app__icon app__icon--txt" aria-hidden="true">!</span>
+        <span class="app__name">Fenêtre introuvable</span>
+      </div>
+      <div class="lost__body">
+        <h1>Cette page n'existe pas.</h1>
+        <p>Le lien est peut-être ancien ou mal recopié. Tout le reste est sur la page d'accueil.</p>
+        <a class="btn btn--accent" href="/">Revenir à l'accueil</a>
+      </div>
     </div>
   </main>
 </body>

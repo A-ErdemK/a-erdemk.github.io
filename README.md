@@ -1,22 +1,24 @@
 # a-erdemk.github.io
 
-Mon portfolio, en ligne sur https://a-erdemk.github.io.
+Mon portfolio, prévu sur https://a-erdemk.github.io.
 
-Site statique fait à la main (HTML, CSS, JavaScript, sans framework ni étape de build), hébergé par GitHub Pages.
+Site statique fait main (HTML, CSS, JavaScript, sans framework ni étape de build), pour GitHub Pages.
 
 ## Idée
 
-Chaque projet est une branche Git qui part de `main` et y revient une fois rendu. La carte du haut et les branches à gauche de chaque projet sont dessinées en SVG par `assets/js/main.js`, à partir des projets présents dans `index.html`.
+Le site ressemble à un bureau d'ordinateur. Chaque projet est une fenêtre d'application, et trois d'entre eux ont une démo qui marche dans la page :
+
+- Portail Infra : changer de rôle et voir ce que chacun a le droit de lire, avec le journal d'audit.
+- Échecs en réseau : jouer un coup et voir le message chiffré (vrai ECDH et AES-GCM, via WebCrypto).
+- Parc du Jurassique : importer un échantillon d'ADN tiré au hasard et voir sa composition.
+
+## Styles
+
+Trois palettes sont prévues dans `assets/css/style.css` (`data-style` sur `<html>` : `nuit`, `clair`, `ciel`). Le bandeau en haut de page sert à choisir ; il sera retiré avant la mise en ligne, avec le style retenu fixé dans `index.html`.
 
 ## Ajouter un projet
 
-1. Ajouter une capture dans `assets/img/` (WebP, 1200 px de large).
-2. Dans `index.html`, copier un `<article class="project">` et changer :
-   - `id` (ancre de la page),
-   - `data-name`, `data-start` et `data-end` (dates `AAAA-MM-JJ`, utilisées par la carte),
-   - la couleur `--c` (ajouter une variable `--c-…` dans `assets/css/style.css`, en clair et en sombre),
-   - le texte, la capture, et le message de fusion (`project__merge`). Sans ce message, la branche reste ouverte.
-3. Ajouter le lien dans la liste `map__list` du haut (utilisée sur mobile et par les lecteurs d'écran).
+Copier un `<article class="app">` dans `index.html`, changer l'`id`, la barre de fenêtre (contexte et dates), le texte et la capture. Ajouter un lien dans le dock du haut si besoin.
 
 ## Lancer en local
 
@@ -25,7 +27,3 @@ python -m http.server 8000
 ```
 
 Puis ouvrir http://localhost:8000.
-
-## Accessibilité
-
-Thème clair et sombre (suivi du système, bouton pour forcer), navigation au clavier, animation de la carte désactivée si le système demande moins de mouvements, texte de remplacement sur chaque image.
