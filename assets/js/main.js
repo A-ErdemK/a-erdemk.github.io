@@ -57,82 +57,116 @@
   });
   syncThemeLabel();
 
-  /* ---------- Navigation : liste des projets, détail, parcours ---------- */
+  /* ---------- Navigation : catalogue, fiche d'un projet, parcours ---------- */
 
   const shell = $("[data-shell]");
   const narrow = matchMedia("(max-width: 900px)");
-  const items = $$("[data-project]");
+  const catalog = $("[data-catalog]");
+  const pane = $("[data-detail-pane]");
+  const main = $("[data-main]");
   const details = $$("[data-detail]");
   const views = $$("[data-view]");
   const tabs = $$("[data-tab]");
-  const pane = $("[data-detail-pane]");
-  const ids = items.map((a) => a.dataset.project);
-  const DEFAULT = "portail";
-  let current = null;
-  let listY = 0;
+  const ORDER = ["pipeline", "portail", "echecs", "cicd", "jurassique", "prestige", "bot"];
+  const titleOf = (id) => $(`#${id} h2`).textContent;
+  let catalogY = 0;
 
   function route() {
     const hash = decodeURIComponent(location.hash.slice(1));
     if (hash === "parcours") return { view: "parcours", project: null };
-    if (ids.includes(hash)) return { view: "projets", project: hash };
+    if (ORDER.includes(hash)) return { view: "projets", project: hash };
     return { view: "projets", project: null };
   }
 
+  // La zone qui défile : la colonne principale sur ordinateur, la page sur téléphone
+  const scroller = () => (narrow.matches ? document.scrollingElement : main);
+
   function render(fromUser) {
     const r = route();
+    const wasDetail = !pane.hidden;
     views.forEach((v) => { v.hidden = v.dataset.view !== r.view; });
     tabs.forEach((t) => (t.dataset.tab === r.view ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current")));
-    const shown = r.project || (narrow.matches ? null : DEFAULT);
-    const changed = shown !== current;
-    current = shown;
-    details.forEach((d) => { d.hidden = d.id !== shown; });
-    items.forEach((a) => (a.dataset.project === shown ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current")));
-    const wasDetail = shell.classList.contains("is-detail");
-    const isDetail = narrow.matches && r.view === "projets" && Boolean(r.project);
-    shell.classList.toggle("is-detail", isDetail);
-    if (fromUser) {
-      if (changed && pane) pane.scrollTop = 0;
-      // Sur téléphone, on revient à l'endroit de la liste qu'on avait quitté
-      if (narrow.matches) window.scrollTo(0, wasDetail && !isDetail ? listY : 0);
-      if (r.view === "parcours") $("#parcours-titre").focus({ preventScroll: true });
-      else if (narrow.matches && r.project) $(`#${r.project} h2`).focus({ preventScroll: true });
+    catalog.hidden = Boolean(r.project);
+    pane.hidden = !r.project;
+    details.forEach((d) => { d.hidden = d.id !== r.project; });
+    shell.classList.toggle("is-detail", Boolean(r.project));
+
+    if (r.project) {
+      const i = ORDER.indexOf(r.project);
+      const prev = ORDER[(i - 1 + ORDER.length) % ORDER.length];
+      const next = ORDER[(i + 1) % ORDER.length];
+      $("[data-prev]").href = `#${prev}`;
+      $("[data-prev-name]").textContent = titleOf(prev);
+      $("[data-next]").href = `#${next}`;
+      $("[data-next-name]").textContent = titleOf(next);
+      $("[data-detail-count]").textContent = `Projet ${i + 1} sur ${ORDER.length}`;
+      document.title = `${titleOf(r.project)}, Erdem Kurac`;
+    } else {
+      document.title = r.view === "parcours" ? "Parcours, Erdem Kurac" : "Erdem Kurac, développeur";
     }
+
+    if (!fromUser) return;
+    // On remonte en haut d'une fiche, et on retrouve sa place dans le catalogue en revenant
+    scroller().scrollTop = r.project || r.view === "parcours" ? 0 : (wasDetail ? catalogY : 0);
+    if (r.project) $(`#${r.project} h2`).focus({ preventScroll: true });
+    else if (r.view === "parcours") $("#parcours-titre").focus({ preventScroll: true });
+    else if (wasDetail && lastCard) lastCard.focus({ preventScroll: true });
   }
 
-  function go(hash) {
-    if (location.hash !== hash) history.pushState({ fromList: hash !== "#projets" && hash !== "#parcours" }, "", hash);
+  let lastCard = null;
+  function go(hash, replace) {
+    if (location.hash !== hash) history[replace ? "replaceState" : "pushState"]({ fromCatalog: !replace && !route().project }, "", hash);
     render(true);
   }
 
-  items.forEach((a) => a.addEventListener("click", (e) => {
-    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+  $$("[data-project]").forEach((a) => a.addEventListener("click", (e) => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
     e.preventDefault();
-    if (narrow.matches) listY = window.scrollY;
+    catalogY = scroller().scrollTop;
+    lastCard = a;
     go(`#${a.dataset.project}`);
   }));
   tabs.forEach((t) => t.addEventListener("click", (e) => { e.preventDefault(); go(`#${t.dataset.tab}`); }));
-  $$("[data-back]").forEach((b) => b.addEventListener("click", (e) => {
+  $("[data-back]").addEventListener("click", (e) => {
     e.preventDefault();
-    if (history.state && history.state.fromList) history.back(); else go("#projets");
+    if (history.state && history.state.fromCatalog) history.back(); else go("#projets");
+  });
+  ["[data-prev]", "[data-next]"].forEach((sel) => $(sel).addEventListener("click", (e) => {
+    e.preventDefault();
+    go($(sel).getAttribute("href"), true);
   }));
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || pane.hidden || /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+    $("[data-back]").click();
+  });
   addEventListener("popstate", () => render(true));
   narrow.addEventListener("change", () => render(false));
 
-  // Flèches haut et bas dans la liste, Entrée pour aller au détail
-  $("#liste").addEventListener("keydown", (e) => {
-    const i = items.indexOf(document.activeElement);
-    if (i < 0) return;
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      const next = items[(i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length];
-      next.focus();
-      if (!narrow.matches) { history.replaceState(null, "", `#${next.dataset.project}`); render(true); }
-    } else if (e.key === "Enter" && !narrow.matches) {
-      e.preventDefault();
-      go(`#${items[i].dataset.project}`);
-      $(`#${items[i].dataset.project} h2`).focus();
-    }
-  });
+  // Filtres du catalogue
+  const filterBtns = $$("[data-filter]");
+  const cardItems = $$("[data-cats]");
+  const filterStatus = $("[data-filter-status]");
+  filterBtns.forEach((b) => b.addEventListener("click", () => {
+    const f = b.dataset.filter;
+    filterBtns.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    let n = 0;
+    cardItems.forEach((li) => {
+      const show = f === "tout" || li.dataset.cats.split(" ").includes(f);
+      li.hidden = !show;
+      if (show) n++;
+    });
+    filterStatus.textContent = `${n} projet${n > 1 ? "s" : ""} affiché${n > 1 ? "s" : ""}`;
+  }));
+
+  // Mini-courbe du robot sur sa carte (données réelles du backtest)
+  const spark = $("[data-spark]");
+  if (spark && DATA.bot) {
+    const pts = DATA.bot.curve;
+    const x = (t) => ((t - 2022) / 4.85) * 320;
+    const y = (v) => 160 - ((v + 15) / 140) * 140;
+    const d = pts.map((p, i) => `${i ? "L" : "M"}${x(p[0]).toFixed(1)},${y(p[1]).toFixed(1)}`).join(" ");
+    spark.innerHTML = `<line class="spark-zero" x1="0" x2="320" y1="${y(0)}" y2="${y(0)}"/><path class="spark-area" d="${d} L320,${y(0)} L0,${y(0)} Z"/><path class="spark-line" d="${d}"/>`;
+  }
 
   render(false);
 
