@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="fr" data-style="nuit">
+<html lang="fr" data-palette="gulf">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Erdem Kurac, développeur</title>
-  <meta name="description" content="Erdem Kurac, développeur en 3e année de BUT Informatique à Orléans. Mes projets, dont trois à tester directement sur la page. Je cherche un stage.">
+  <meta name="description" content="Erdem Kurac, développeur en 3e année de BUT Informatique à Orléans. Sept projets, dont quatre à essayer directement sur la page. Je cherche un stage de fin d'études.">
   <link rel="canonical" href="https://a-erdemk.github.io/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://a-erdemk.github.io/">
   <meta property="og:title" content="Erdem Kurac, développeur">
-  <meta property="og:description" content="Mes projets, dont trois à tester directement sur la page. Je cherche un stage.">
+  <meta property="og:description" content="Sept projets, dont quatre à essayer directement sur la page. Je cherche un stage de fin d'études.">
   <meta property="og:image" content="https://a-erdemk.github.io/assets/img/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -18,20 +18,21 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="assets/css/style.css">
   <script>
-    // Style choisi gardé d'une visite à l'autre (le temps de choisir)
-    try { const s = localStorage.getItem("style"); if (s) document.documentElement.dataset.style = s; } catch (e) {}
+    // Thème (clair ou sombre) et palette, choisis avant l'affichage pour éviter un flash
+    (function () {
+      var q = new URLSearchParams(location.search), d = document.documentElement, t = null, p = null;
+      try { t = localStorage.getItem("theme"); p = localStorage.getItem("palette"); } catch (e) {}
+      if (q.get("theme")) t = q.get("theme");
+      if (q.get("palette")) p = q.get("palette");
+      if (t !== "light" && t !== "dark") { t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"; d.dataset.themeAuto = "1"; }
+      d.dataset.theme = t;
+      if (p) d.dataset.palette = p;
+      if (q.has("apercu")) d.classList.add("is-preview");
+    })();
   </script>
 </head>
 <body>
   <a class="skip" href="#projets">Aller aux projets</a>
-
-  <!-- Choix du style, le temps de décider (à retirer avant publication) -->
-  <div class="picker" role="group" aria-label="Choisir le style du site">
-    <span>Bandeau provisoire, choisissez un style :</span>
-    <button type="button" data-pick="nuit">Nuit</button>
-    <button type="button" data-pick="clair">Clair</button>
-    <button type="button" data-pick="ciel">Ciel</button>
-  </div>
 
   <header class="menubar">
     <div class="menubar__in">
@@ -41,61 +42,91 @@
         <a href="#parcours">Parcours</a>
         <a href="#contact">Contact</a>
       </nav>
-      <p class="menubar__status"><span class="dot" aria-hidden="true"></span>Disponible pour un stage</p>
-      <a class="menubar__link" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a>
-      <a class="btn btn--accent btn--sm" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage">M'écrire</a>
+
+      <button class="menubar__search" type="button" data-spotlight-open aria-label="Rechercher un projet ou une compétence">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <span class="menubar__search-txt">Rechercher</span>
+        <kbd data-shortcut>Ctrl K</kbd>
+      </button>
+
+      <button class="menubar__status" type="button" popovertarget="dispo" aria-label="Disponible pour un stage : voir comment me contacter">
+        <span class="dot" aria-hidden="true"></span><span class="menubar__status-txt">Disponible pour un stage</span>
+      </button>
+
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Passer en thème clair">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.6A8 8 0 0 1 9.4 4.5a8 8 0 1 0 10.1 10.1Z"/></svg>
+      </button>
+
+      <a class="btn btn--accent btn--sm menubar__mail" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage">M'écrire</a>
+    </div>
+
+    <!-- Menu d'état : on clique sur « Disponible pour un stage » comme sur une icône de la barre d'un ordinateur -->
+    <div id="dispo" class="dispo" popover>
+      <p class="dispo__title"><span class="dot" aria-hidden="true"></span>Disponible pour un stage</p>
+      <p class="dispo__text">Je cherche un stage de fin d'études pour ma 3e année de BUT Informatique.</p>
+      <div class="dispo__actions">
+        <a class="btn btn--accent" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage">Écrire un e-mail</a>
+        <button class="btn" type="button" data-copy="kuracerdem@gmail.com">Copier l'adresse</button>
+        <a class="btn btn--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a>
+        <a class="btn btn--ghost" href="https://github.com/A-ErdemK" rel="me">GitHub</a>
+      </div>
     </div>
   </header>
 
   <main id="top">
-    <!-- Accueil : présentation à gauche, le "bureau" avec les fenêtres des projets à droite -->
     <section class="hero" aria-labelledby="hero-titre">
       <div class="hero__text">
         <h1 id="hero-titre">Erdem Kurac</h1>
         <p class="hero__lead">Développeur en 3e année de BUT Informatique à Orléans. Je construis des applications web en entier, de la base de données jusqu'à l'écran.</p>
-        <p class="hero__status">Je cherche un stage de fin d'études.</p>
+        <p class="hero__status"><span class="dot" aria-hidden="true"></span>Je cherche un stage de fin d'études.</p>
         <div class="hero__actions">
           <a class="btn btn--accent" href="#projets">Voir mes projets</a>
           <a class="btn" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage">M'écrire</a>
           <a class="btn btn--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a>
         </div>
+        <p class="hero__tip">Vous cherchez une compétence précise ? Appuyez sur <kbd data-shortcut>Ctrl K</kbd> et tapez « Docker », « Vue » ou « sécurité ».</p>
       </div>
 
-      <div class="desk" aria-label="Aperçu des projets">
-        <a class="desk__win desk__win--1" href="#jurassique">
+      <div class="desk" data-desk aria-label="Aperçu des projets">
+        <a class="desk__win desk__win--1" href="#jurassique" data-win>
           <span class="desk__bar">Parc du Jurassique</span>
-          <img src="assets/img/jurassique.webp" width="1200" height="606" alt="">
+          <img src="assets/img/jurassique.webp" width="1200" height="606" alt="" draggable="false">
         </a>
-        <a class="desk__win desk__win--2" href="#echecs">
+        <a class="desk__win desk__win--2" href="#echecs" data-win>
           <span class="desk__bar">Échecs en réseau</span>
-          <img src="assets/img/echecs.webp" width="900" height="897" alt="">
+          <img src="assets/img/echecs.webp" width="900" height="897" alt="" draggable="false">
         </a>
-        <a class="desk__win desk__win--3" href="#portail">
+        <a class="desk__win desk__win--3" href="#portail" data-win>
           <span class="desk__bar">Portail Infra</span>
-          <img src="assets/img/portail-infra.webp" width="1200" height="637" alt="">
+          <img src="assets/img/portail-infra.webp" width="1200" height="637" alt="" draggable="false">
         </a>
+        <p class="desk__hint" data-desk-hint>Ces fenêtres se déplacent, essayez.</p>
+        <button class="desk__tidy btn btn--sm" type="button" data-desk-tidy hidden>Ranger le bureau</button>
       </div>
 
       <nav class="dock" aria-label="Accès direct aux projets">
-        <a href="#portail"><img src="assets/img/portail-infra.webp" alt=""><span>Portail Infra</span></a>
-        <a href="#echecs"><img src="assets/img/echecs.webp" alt=""><span>Échecs</span></a>
-        <a href="#jurassique"><img src="assets/img/jurassique.webp" alt=""><span>Jurassique</span></a>
-        <a href="#prestige"><img src="assets/img/prestige-auto.webp" alt=""><span>Prestige Auto</span></a>
-        <a href="#cicd"><span class="dock__txt" aria-hidden="true">CI</span><span>CI/CD</span></a>
-        <a href="#contact"><span class="dock__txt" aria-hidden="true">@</span><span>Contact</span></a>
+        <a href="#portail"><span class="dock__ico ico--portail" aria-hidden="true">PI</span><span>Portail Infra</span></a>
+        <a href="#echecs"><span class="dock__ico ico--echecs" aria-hidden="true">EC</span><span>Échecs</span></a>
+        <a href="#cicd"><span class="dock__ico ico--cicd" aria-hidden="true">CI</span><span>CI/CD</span></a>
+        <a href="#jurassique"><span class="dock__ico ico--jura" aria-hidden="true">JP</span><span>Jurassique</span></a>
+        <a href="#prestige"><span class="dock__ico ico--prestige" aria-hidden="true">PA</span><span>Prestige</span></a>
+        <a href="#pipeline"><span class="dock__ico ico--pipeline" aria-hidden="true">DP</span><span>En cours</span></a>
+        <a href="#bot"><span class="dock__ico ico--bot" aria-hidden="true">EA</span><span>Robot</span></a>
+        <a href="#contact"><span class="dock__ico ico--contact" aria-hidden="true">@</span><span>Contact</span></a>
       </nav>
     </section>
 
     <section id="projets" class="projects" aria-labelledby="projets-titre">
       <div class="section-head">
         <h2 id="projets-titre">Mes projets</h2>
-        <p>Ce que j'ai construit depuis septembre 2025. Trois d'entre eux se testent directement ici.</p>
+        <p>Ce que j'ai construit depuis septembre 2025, du plus important au plus personnel. Quatre d'entre eux s'essaient directement ici, avec de vraies données ou un vrai chiffrement.</p>
       </div>
 
       <!-- Portail Infra -->
-      <article id="portail" class="app" aria-labelledby="portail-titre">
+      <article id="portail" class="app" aria-labelledby="portail-titre" data-search="portail infra stage hôpital gien vue flask mysql ldap jwt aes docker sécurité audit back-end front-end api tests python">
         <div class="app__bar">
-          <span class="app__icon app__icon--portail" aria-hidden="true">PI</span>
+          <span class="app__icon ico--portail" aria-hidden="true">PI</span>
           <span class="app__name">Stage au Centre Hospitalier de Gien</span>
           <span class="app__ctx">Avril à juin 2026</span>
         </div>
@@ -106,7 +137,7 @@
             <ul class="app__points">
               <li>Connexion avec l'annuaire LDAP de l'hôpital, et une base locale de secours si l'annuaire ne répond pas.</li>
               <li>Trois rôles, administrateur, technicien et lecteur, avec des droits par service.</li>
-              <li>Les mots de passe sont chiffrés en AES. Ils ne s'affichent qu'à la demande, et chaque lecture laisse une trace dans le journal d'audit.</li>
+              <li>Les mots de passe sont stockés chiffrés en AES-256. Ils ne s'affichent qu'à la demande, et chaque lecture laisse une trace dans le journal d'audit.</li>
               <li>API Flask couverte par 14 fichiers de tests, interface en Vue 3, le tout lancé avec Docker Compose.</li>
             </ul>
             <p class="app__stack">Vue 3, Flask, MySQL, OpenLDAP, JWT, Docker</p>
@@ -115,7 +146,7 @@
           <div class="demo demo--portail">
             <div class="demo__head">
               <p class="demo__title">Testez avec chaque rôle</p>
-              <p class="demo__note">Données inventées</p>
+              <p class="demo__note">Compte inventé, vrai chiffrement</p>
             </div>
             <div class="seg" role="group" aria-label="Rôle connecté">
               <button type="button" aria-pressed="true" data-role="Administrateur">Administrateur</button>
@@ -123,11 +154,16 @@
               <button type="button" aria-pressed="false" data-role="Lecteur">Lecteur</button>
             </div>
             <div class="acc">
-              <div>
-                <p class="acc__name">svc_sauvegarde</p>
-                <p class="acc__meta">SRV-FICHIERS-01, service Informatique</p>
+              <div class="acc__head">
+                <div>
+                  <p class="acc__name">svc_sauvegarde</p>
+                  <p class="acc__meta">SRV-FICHIERS-01, service Informatique</p>
+                </div>
+                <button class="btn btn--sm btn--portail" type="button" data-reveal aria-pressed="false">Afficher le mot de passe</button>
               </div>
-              <button class="btn btn--sm btn--portail" type="button" data-reveal aria-pressed="false">Afficher le mot de passe</button>
+              <p class="acc__label">Stocké en base (AES-256-CBC)</p>
+              <p class="acc__cipher" data-pwd-cipher>Chiffrement en cours…</p>
+              <p class="acc__label">Mot de passe</p>
               <p class="acc__pwd" data-pwd aria-live="polite">••••••••••••</p>
             </div>
             <p class="demo__why" data-why aria-live="polite"></p>
@@ -140,9 +176,9 @@
       </article>
 
       <!-- Échecs -->
-      <article id="echecs" class="app" aria-labelledby="echecs-titre">
+      <article id="echecs" class="app" aria-labelledby="echecs-titre" data-search="échecs réseau chiffré sae python pygame sockets ecdh aes-gcm cryptographie sécurité serveur sqlite pytest jeu">
         <div class="app__bar">
-          <span class="app__icon app__icon--echecs" aria-hidden="true">EC</span>
+          <span class="app__icon ico--echecs" aria-hidden="true">EC</span>
           <span class="app__name">SAE en équipe de quatre</span>
           <span class="app__ctx">Déc. 2025 à janv. 2026</span>
         </div>
@@ -151,36 +187,77 @@
             <h3 id="echecs-titre">Échecs en réseau chiffré</h3>
             <p class="app__pitch">Un jeu d'échecs complet, en local ou en ligne contre un autre joueur. Dans l'équipe, je me suis occupé de la partie réseau : le serveur, la mise en relation des joueurs et le chiffrement des échanges.</p>
             <ul class="app__points">
-              <li>Le serveur fait tourner plusieurs parties en même temps.</li>
-              <li>Les deux joueurs s'échangent une clé avec ECDH, puis chaque coup part chiffré en AES-GCM.</li>
-              <li>Comptes joueurs aux mots de passe hachés, historique des parties, règles complètes grâce à python-chess.</li>
+              <li>Le serveur fait tourner plusieurs parties en même temps et valide chaque coup avec python-chess.</li>
+              <li>Au lancement, chaque joueur échange une clé avec le serveur (ECDH). Ensuite, tous les messages passent chiffrés en AES-GCM.</li>
+              <li>Comptes joueurs aux mots de passe hachés et historique des parties.</li>
             </ul>
             <p class="app__stack">Python, Pygame, sockets, cryptography, SQLite, Pytest</p>
           </div>
 
           <div class="demo demo--echecs">
             <div class="demo__head">
-              <p class="demo__title">Jouez un coup</p>
+              <p class="demo__title">Jouez contre le serveur</p>
               <p class="demo__note">Chiffrement réel, dans votre navigateur</p>
             </div>
             <div class="chess">
-              <div class="board" data-board role="group" aria-label="Échiquier. Choisissez une pièce blanche, puis une case."></div>
+              <div class="board" data-board role="group" aria-label="Échiquier. Vous jouez les blancs : choisissez une pièce, puis une case."></div>
               <div class="wire">
-                <p class="demo__label">Le coup que vous jouez</p>
-                <pre data-plain>Cliquez sur une pièce blanche, puis sur une case.</pre>
-                <p class="demo__label">Ce qu'un espion verrait passer sur le réseau</p>
-                <pre class="wire__cipher" data-cipher aria-live="polite">Rien pour l'instant.</pre>
-                <button class="btn btn--sm btn--ghost" type="button" data-reset>Remettre les pièces</button>
+                <p class="demo__label">Vous envoyez</p>
+                <pre data-plain>Choisissez une pièce blanche : les cases possibles s'allument.</pre>
+                <p class="demo__label">Ce qu'un espion verrait sur le réseau</p>
+                <pre class="wire__cipher" data-cipher>Rien pour l'instant.</pre>
+                <p class="demo__label">Le serveur répond</p>
+                <pre data-reply aria-live="polite">En attente de votre coup.</pre>
+                <button class="btn btn--sm btn--echecs" type="button" data-reset>Nouvelle partie</button>
               </div>
             </div>
           </div>
         </div>
       </article>
 
-      <!-- Jurassique -->
-      <article id="jurassique" class="app" aria-labelledby="jura-titre">
+      <!-- CI/CD -->
+      <article id="cicd" class="app" aria-labelledby="cicd-titre" data-search="ci/cd chaîne intégration déploiement github actions docker .net react mariadb trivy tests xunit vitest testcontainers devops automatisation ssh">
         <div class="app__bar">
-          <span class="app__icon app__icon--jura" aria-hidden="true">JP</span>
+          <span class="app__icon ico--cicd" aria-hidden="true">CI</span>
+          <span class="app__name">Module automatisation, BUT 3</span>
+          <span class="app__ctx">Sept. à oct. 2026</span>
+        </div>
+        <div class="app__body">
+          <div class="app__text">
+            <h3 id="cicd-titre">Chaîne CI/CD</h3>
+            <p class="app__pitch">Une application de tâches en React, .NET et MariaDB, que j'ai rendue livrable sans intervention humaine. En clair : chaque modification passe une série de contrôles automatiques, et n'arrive en ligne que si tout est vert.</p>
+            <ul class="app__points">
+              <li>Images Docker optimisées : le build complet est passé de 3 min 40 à 48 s.</li>
+              <li>Workflow GitHub Actions avec lint, tests xUnit et Vitest, et tests d'intégration avec Testcontainers.</li>
+              <li>Audit des dépendances et scan de l'image avec Trivy avant toute publication.</li>
+              <li>Déploiement par SSH en test puis en production, suivi d'un test de fumée qui vérifie que l'API répond vraiment.</li>
+            </ul>
+            <p class="app__stack">GitHub Actions, Docker, .NET, React, Trivy</p>
+          </div>
+
+          <div class="demo demo--cicd">
+            <div class="demo__head">
+              <p class="demo__title">Rejouez un vrai déploiement</p>
+              <p class="demo__note">Runs du 12 octobre 2026, accélérés</p>
+            </div>
+            <div class="seg seg--dark" role="group" aria-label="Run à rejouer">
+              <button type="button" aria-pressed="true" data-run-pick="ok">Le run réussi</button>
+              <button type="button" aria-pressed="false" data-run-pick="ko">Celui qui a échoué</button>
+            </div>
+            <div class="flow" data-flow aria-hidden="true"></div>
+            <p class="flow__log" data-flow-log aria-live="polite">Prêt à rejouer le run de 18 h 05, commit f3123ba.</p>
+            <div class="flow__foot">
+              <button class="btn btn--sm btn--cicd" type="button" data-run-play>Lancer le replay</button>
+              <p class="flow__clock"><span data-flow-clock>0:00</span> sur <span data-flow-total>3:52</span> de run réel</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Jurassique -->
+      <article id="jurassique" class="app" aria-labelledby="jura-titre" data-search="parc du jurassique sae flask sqlalchemy mysql jinja pytest adn back-end web base de données équipe pull requests">
+        <div class="app__bar">
+          <span class="app__icon ico--jura" aria-hidden="true">JP</span>
           <span class="app__name">SAE en équipe de quatre</span>
           <span class="app__ctx">Sept. à déc. 2025</span>
         </div>
@@ -199,7 +276,7 @@
           <div class="demo demo--jura">
             <div class="demo__head">
               <p class="demo__title">Analysez un échantillon</p>
-              <p class="demo__note">Séquence tirée au hasard</p>
+              <p class="demo__note">Tiré au hasard, ou votre fichier</p>
             </div>
             <p class="dna__file" data-dna-file>Aucun échantillon importé</p>
             <div class="dna__bars" data-dna-bars>
@@ -209,16 +286,20 @@
               <div><span>T</span><i style="--v: 0"></i><b>0</b></div>
             </div>
             <p class="demo__label">Aperçu de la séquence</p>
-            <pre class="dna__seq" data-dna-seq>Cliquez sur le bouton pour importer un échantillon.</pre>
-            <button class="btn btn--sm btn--jura" type="button" data-dna>Importer un échantillon</button>
+            <pre class="dna__seq" data-dna-seq>Importez un échantillon pour voir sa séquence.</pre>
+            <div class="dna__actions">
+              <button class="btn btn--sm btn--jura" type="button" data-dna>Importer un échantillon</button>
+              <label class="btn btn--sm btn--jura-ghost">Utiliser mon fichier<input type="file" accept=".adn,.txt,.fasta,.fa" data-dna-input hidden></label>
+            </div>
+            <p class="demo__why" data-dna-msg aria-live="polite"></p>
           </div>
         </div>
       </article>
 
       <!-- Prestige Auto -->
-      <article id="prestige" class="app" aria-labelledby="prestige-titre">
+      <article id="prestige" class="app" aria-labelledby="prestige-titre" data-search="prestige auto javascript spa front-end routeur rollup json-server voitures web vanilla">
         <div class="app__bar">
-          <span class="app__icon app__icon--prestige" aria-hidden="true">PA</span>
+          <span class="app__icon ico--prestige" aria-hidden="true">PA</span>
           <span class="app__name">Module web, en binôme</span>
           <span class="app__ctx">Mars à avril 2026</span>
         </div>
@@ -239,49 +320,78 @@
         </div>
       </article>
 
-      <!-- CI/CD -->
-      <article id="cicd" class="app" aria-labelledby="cicd-titre">
+      <!-- En ce moment -->
+      <article id="pipeline" class="app app--live" aria-labelledby="pipeline-titre" data-search="en cours desktop data pipeline sae pyqt6 pandas sqlalchemy alembic sqlite pyinstaller python laboratoire xps raman électrochimie application de bureau">
         <div class="app__bar">
-          <span class="app__icon app__icon--cicd" aria-hidden="true">CI</span>
-          <span class="app__name">Module automatisation, BUT 3</span>
-          <span class="app__ctx">Sept. à oct. 2026</span>
+          <span class="app__icon ico--pipeline" aria-hidden="true">DP</span>
+          <span class="app__name">Ce que je code en ce moment</span>
+          <span class="app__ctx"><span class="live" aria-hidden="true"></span>En cours</span>
         </div>
         <div class="app__body">
           <div class="app__text">
-            <h3 id="cicd-titre">Chaîne CI/CD</h3>
-            <p class="app__pitch">Une petite application de tâches, en React, .NET et MariaDB, que j'ai équipée d'une chaîne d'intégration et de déploiement. À chaque push, elle est vérifiée, testée, scannée puis mise en ligne sur une machine virtuelle.</p>
+            <h3 id="pipeline-titre">Desktop Data Pipeline</h3>
+            <p class="app__pitch">Notre SAE de 3e année : une application de bureau pour un laboratoire. Elle importe les mesures de trois types d'appareils (XPS, Raman et électrochimie), les range en base et les affiche en courbes.</p>
             <ul class="app__points">
-              <li>Images Docker optimisées : le build complet est passé de 3 min 40 à 48 s.</li>
-              <li>Workflow GitHub Actions avec lint, tests xUnit et Vitest, et tests d'intégration avec Testcontainers.</li>
-              <li>Scan de vulnérabilités avec Trivy, puis déploiement par SSH en gardant la trace du commit déployé.</li>
+              <li>Interface en PyQt6, lecture des fichiers avec Pandas, base gérée avec SQLAlchemy et ses migrations Alembic.</li>
+              <li>Connexion, rôles et journal des actions, vérifiés aussi du côté des services.</li>
+              <li>Exécutables PyInstaller pour Windows, macOS et Linux.</li>
+              <li>49 des 100 derniers commits sont de moi.</li>
             </ul>
-            <p class="app__stack">GitHub Actions, Docker, .NET, React, Trivy</p>
+            <p class="app__stack">Python, PyQt6, Pandas, SQLAlchemy, Alembic, PyInstaller</p>
           </div>
-          <ol class="pipe" aria-label="Étapes de la chaîne">
-            <li>Push sur GitHub</li>
-            <li>Lint et tests</li>
-            <li>Tests d'intégration</li>
-            <li>Build des images Docker</li>
-            <li>Scan Trivy</li>
-            <li>Déploiement sur la machine virtuelle</li>
-            <li>Test de fumée</li>
-          </ol>
+          <div class="branches">
+            <p class="branches__title">Quelques branches du chantier</p>
+            <ul>
+              <li><code>feat/parser-xps</code></li>
+              <li><code>feat/parser-raman</code></li>
+              <li><code>feat/parser-electrochimie</code></li>
+              <li><code>feat/visualisation</code></li>
+              <li><code>feat/build-v2</code></li>
+              <li><code>bdd-securite</code></li>
+            </ul>
+            <p class="branches__note">La capture d'écran arrivera ici quand le projet sera terminé.</p>
+          </div>
         </div>
       </article>
 
-      <!-- Robot de trading : fenêtre réduite, à déplier -->
-      <details id="bot" class="app app--mini">
-        <summary class="app__bar">
-          <span class="app__icon app__icon--bot" aria-hidden="true">EA</span>
-          <span class="app__name">Robot de trading</span>
-          <span class="app__ctx">Projet perso</span>
-          <span class="app__toggle" aria-hidden="true"></span>
-        </summary>
-        <div class="app__body app__body--mini">
-          <p>Pour le plaisir, à côté des cours : un Expert Advisor pour MetaTrader 5, écrit en MQL5, avec des scripts Python qui analysent ses backtests.</p>
-          <p class="app__stack">MQL5, Python</p>
+      <!-- Robot de trading -->
+      <article id="bot" class="app app--bot" aria-labelledby="bot-titre" data-search="robot trading mt5 mql5 python backtest metatrader expert advisor finance statistiques monte-carlo projet perso">
+        <div class="app__bar">
+          <span class="app__icon ico--bot" aria-hidden="true">EA</span>
+          <span class="app__name">Projet perso</span>
+          <span class="app__ctx">Octobre 2026</span>
         </div>
-      </details>
+        <div class="app__body">
+          <div class="app__text">
+            <h3 id="bot-titre">Robot de trading</h3>
+            <p class="app__pitch">Pour le plaisir, à côté des cours : un robot pour MetaTrader 5, écrit en MQL5, qui applique une stratégie de trading tout seul. Le plus gros du travail a été de le tester honnêtement.</p>
+            <ul class="app__points">
+              <li>Plus de 60 variantes et 8 modèles testés, avec un journal de chaque essai.</li>
+              <li>Chaque règle vérifiée sur une période que je n'avais pas utilisée pour la mettre au point (2022 à 2023), puis sur 2024 à 2026.</li>
+              <li>Scripts Python pour analyser les trades et simuler un challenge de prop firm par Monte-Carlo.</li>
+            </ul>
+            <p class="app__stack">MQL5, Python</p>
+          </div>
+
+          <div class="demo demo--bot">
+            <div class="demo__head">
+              <p class="demo__title">301 trades en backtest, 2022 à 2026</p>
+              <p class="demo__note">Survolez la courbe</p>
+            </div>
+            <div class="chart" data-chart>
+              <svg data-chart-svg role="img" aria-label="Gains cumulés du robot en backtest : de 0 à environ 114 R entre 2022 et 2026, sur 301 trades."></svg>
+              <p class="chart__tip" data-chart-tip hidden></p>
+            </div>
+            <dl class="kpis">
+              <div><dt>Trades gagnants</dt><dd>43 %</dd></div>
+              <div><dt>Gain moyen</dt><dd>+0,38 R</dd></div>
+              <div><dt>Années positives</dt><dd>5 sur 5</dd></div>
+              <div><dt>Pire baisse</dt><dd>environ 10 R</dd></div>
+            </dl>
+            <p class="demo__why">1 R, c'est la somme risquée sur un trade. Ce sont des backtests sur des données passées, pas de l'argent réel : ils ne garantissent rien pour la suite.</p>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section id="parcours" class="path" aria-labelledby="parcours-titre">
@@ -297,9 +407,9 @@
         <dl class="skills">
           <div><dt>Back-end</dt><dd>Python avec Flask et Django, C# avec .NET, Java. API REST, connexion JWT et LDAP. <a href="#portail">Voir Portail Infra</a></dd></div>
           <div><dt>Front-end</dt><dd>Vue 3, React, JavaScript sans framework, TypeScript, HTML et CSS, Flutter pour le mobile. <a href="#prestige">Voir Prestige Auto</a></dd></div>
-          <div><dt>Données</dt><dd>MySQL, PostgreSQL, Oracle, SQLite : modélisation, requêtes, triggers. <a href="#jurassique">Voir le Jurassique</a></dd></div>
-          <div><dt>Sécurité</dt><dd>Chiffrement AES et ECDH, mots de passe hachés, journal d'audit. <a href="#echecs">Voir les échecs</a></dd></div>
-          <div><dt>Travail en équipe</dt><dd>Git avec branches, pull requests et revues, Docker, GitHub Actions, tests automatisés. <a href="#cicd">Voir la CI/CD</a></dd></div>
+          <div><dt>Données</dt><dd>MySQL, PostgreSQL, Oracle, SQLite : modélisation, requêtes, triggers, migrations. <a href="#jurassique">Voir le Jurassique</a></dd></div>
+          <div><dt>Sécurité</dt><dd>Chiffrement AES et ECDH, mots de passe hachés, journal d'audit, scan de vulnérabilités. <a href="#echecs">Voir les échecs</a></dd></div>
+          <div><dt>Livraison</dt><dd>Git en équipe avec branches, pull requests et revues, Docker, GitHub Actions, tests automatisés. <a href="#cicd">Voir la CI/CD</a></dd></div>
         </dl>
       </div>
     </section>
@@ -307,21 +417,21 @@
     <section id="contact" class="contact" aria-labelledby="contact-titre">
       <div class="app app--mail">
         <div class="app__bar">
-          <span class="app__icon app__icon--txt" aria-hidden="true">@</span>
+          <span class="app__icon ico--contact" aria-hidden="true">@</span>
           <span class="app__name">Nouveau message</span>
+          <span class="app__ctx">Brouillon prêt</span>
         </div>
         <div class="mail">
           <p class="mail__row"><span>À</span><span class="mail__to">kuracerdem@gmail.com</span></p>
           <p class="mail__row"><span>Objet</span><span>Proposition de stage</span></p>
           <div class="mail__body">
             <h2 id="contact-titre">Un stage pour finir mon BUT ?</h2>
-            <p>Si un de ces projets vous a parlé, écrivez-moi. Vous pouvez aussi passer par LinkedIn.</p>
+            <p>Il ne manque plus que votre message. Si un de ces projets vous a parlé, écrivez-moi, ou passez par LinkedIn si vous préférez.</p>
             <div class="mail__actions">
               <a class="btn btn--accent" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage">Écrire un e-mail</a>
               <button class="btn" type="button" data-copy="kuracerdem@gmail.com">Copier l'adresse</button>
               <a class="btn btn--ghost" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">Voir mon LinkedIn</a>
             </div>
-            <p class="mail__toast" data-toast role="status" aria-live="polite"></p>
           </div>
         </div>
       </div>
@@ -329,11 +439,26 @@
   </main>
 
   <footer class="foot">
-    <p>Site fait main en HTML, CSS et JavaScript. Code des projets sur demande.</p>
-    <p><a href="https://github.com/A-ErdemK" rel="me">GitHub</a></p>
+    <p>Ce site est lui aussi un projet : fait main, sans framework, et ses démos chiffrent pour de vrai dans votre navigateur. Mis à jour en novembre 2026.</p>
+    <p class="foot__links"><a href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me">LinkedIn</a><a href="https://github.com/A-ErdemK" rel="me">GitHub</a></p>
   </footer>
 
+  <!-- Recherche (Ctrl K) -->
+  <dialog class="spot" data-spotlight aria-label="Rechercher">
+    <form method="dialog" class="spot__form" data-spot-form>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <label class="sr-only" for="spot-input">Rechercher un projet, une compétence ou une action</label>
+      <input id="spot-input" type="text" autocomplete="off" spellcheck="false" placeholder="Projet, techno, action…" role="combobox" aria-expanded="true" aria-controls="spot-list" aria-autocomplete="list" data-spot-input>
+      <kbd>Échap</kbd>
+    </form>
+    <ul id="spot-list" class="spot__list" role="listbox" aria-label="Résultats" data-spot-list></ul>
+    <p class="spot__empty" data-spot-empty hidden></p>
+  </dialog>
 
+  <p class="toast" data-toast role="status" aria-live="polite"></p>
+
+  <script src="assets/vendor/chess.global.js" defer></script>
+  <script src="assets/js/data.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </body>
 </html>

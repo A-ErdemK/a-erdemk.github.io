@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-style="nuit">
+<html lang="fr" data-palette="gulf">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Onest:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="/assets/css/style.css">
   <script>
-    try { const s = localStorage.getItem("style"); if (s) document.documentElement.dataset.style = s; } catch (e) {}
+    (function () {
+      var d = document.documentElement, t = null, p = null;
+      try { t = localStorage.getItem("theme"); p = localStorage.getItem("palette"); } catch (e) {}
+      if (t !== "light" && t !== "dark") t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      d.dataset.theme = t;
+      if (p) d.dataset.palette = p;
+    })();
   </script>
   <style>
     .lost { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
@@ -26,7 +32,7 @@
   <main class="lost">
     <div class="app">
       <div class="app__bar">
-        <span class="app__icon app__icon--txt" aria-hidden="true">!</span>
+        <span class="app__icon ico--contact" aria-hidden="true">!</span>
         <span class="app__name">Fenêtre introuvable</span>
       </div>
       <div class="lost__body">
