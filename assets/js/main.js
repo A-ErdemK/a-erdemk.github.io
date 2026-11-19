@@ -359,6 +359,77 @@
   if (projectInHash()) openSheet(projectInHash());
 
 
+  /* ---------- Hors du code : le compte-tours ---------- */
+
+  const tacho = $("[data-tacho]");
+  if (tacho) {
+    const svg = $("[data-tacho-svg]", tacho);
+    const rev = $("[data-rev]");
+    const NS = "http://www.w3.org/2000/svg";
+    const CX = 120, CY = 110, R = 92, A0 = 210, A1 = -30, MAX = 8000, RED = 6500;
+    const deg = (v) => A0 - ((A0 - A1) * v) / MAX;
+    const pt = (v, r) => { const a = (deg(v) * Math.PI) / 180; return [CX + Math.cos(a) * r, CY - Math.sin(a) * r]; };
+    const add = (name, attrs, text) => {
+      const n = document.createElementNS(NS, name);
+      for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+      if (text !== undefined) n.textContent = text;
+      svg.appendChild(n);
+      return n;
+    };
+    const arc = (from, to, r) => {
+      const [x0, y0] = pt(from, r), [x1, y1] = pt(to, r);
+      return `M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 ${((to - from) / MAX) * 240 > 180 ? 1 : 0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+    };
+    add("path", { d: arc(0, MAX, R), class: "tacho__track" });
+    add("path", { d: arc(RED, MAX, R), class: "tacho__red" });
+    for (let k = 0; k <= 16; k++) {
+      const v = k * 500, major = k % 2 === 0;
+      const [x0, y0] = pt(v, R - 8), [x1, y1] = pt(v, R - (major ? 20 : 14));
+      add("line", { x1: x0, y1: y0, x2: x1, y2: y1, class: major ? "tacho__tick tacho__tick--major" : "tacho__tick" });
+      if (major) { const [tx, ty] = pt(v, R - 34); add("text", { x: tx, y: ty + 4, class: "tacho__num" }, v / 1000); }
+    }
+    const needle = add("line", { x1: CX, y1: CY + 10, x2: CX, y2: CY - (R - 16), class: "tacho__needle" });
+    add("circle", { cx: CX, cy: CY, r: 7, class: "tacho__hub" });
+    const readout = add("text", { x: CX, y: CY + 56, class: "tacho__rpm" }, "0");
+    add("text", { x: CX, y: CY + 72, class: "tacho__unit" }, "tr/min");
+
+    if (matchMedia("(pointer: coarse)").matches) rev.textContent = "Restez appuyé pour accélérer";
+    let rpm = 0, holding = false, started = false, raf = 0, last = 0;
+    function render() {
+      needle.setAttribute("transform", `rotate(${(90 - deg(rpm)).toFixed(2)} ${CX} ${CY})`);
+      readout.textContent = (Math.round(rpm / 10) * 10).toLocaleString("fr-FR");
+      tacho.classList.toggle("is-red", rpm > RED);
+    }
+    function tick(now) {
+      const dt = Math.min(0.05, (now - (last || now)) / 1000);
+      last = now;
+      const idle = started ? 850 : 0;
+      if (holding) {
+        rpm += (2400 + rpm * 0.7) * dt;
+        // Le rupteur coupe l'allumage juste avant la zone rouge maximale
+        if (rpm > 7600) rpm = 7600 - Math.random() * 500;
+      } else {
+        rpm += (idle - rpm) * Math.min(1, dt * 2.4);
+      }
+      render();
+      if (holding || Math.abs(rpm - idle) > 4) { raf = requestAnimationFrame(tick); return; }
+      rpm = idle; render(); raf = 0; last = 0;
+    }
+    const press = () => {
+      holding = true; started = true;
+      rev.classList.add("is-held");
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    const release = () => { holding = false; rev.classList.remove("is-held"); };
+    rev.addEventListener("pointerdown", (e) => { e.preventDefault(); try { rev.setPointerCapture(e.pointerId); } catch (err) { /* événement simulé */ } press(); });
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach((t) => rev.addEventListener(t, release));
+    rev.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(); } });
+    rev.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") release(); });
+    rev.addEventListener("blur", release);
+    rev.addEventListener("contextmenu", (e) => e.preventDefault());
+    render();
+  }
+
   /* ---------- Démo Portail Infra : rôles, AES-256-CBC, journal d'audit ---------- */
 
   const portail = $(".demo--portail");

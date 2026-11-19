@@ -6,7 +6,8 @@ Site statique fait main (HTML, CSS, JavaScript, sans framework ni étape de buil
 
 ## Comment il est fait
 
-- Une seule page : présentation, carte de stage, projets, parcours, contact.
+- Une seule page : présentation, carte de stage, projets, parcours, contact. Le CV en PDF est dans `assets/cv-erdem-kurac.pdf`.
+- « Hors du code » : un compte-tours qu'on fait monter en maintenant un bouton (souris, doigt ou clavier), pour la passion de la mécanique et de l'automobile.
 - Deux thèmes, selon l'ordinateur du visiteur ou le bouton en haut : « Labo » en sombre, avec le jeu de la vie de Conway en fond (la souris sème des cellules, un clic en lâche une poignée), et « Métro » en clair, avec un plan de lignes de métro dont les stations portent le nom des projets. Le fond est dessiné dans un `<canvas>`, se met en pause quand l'onglet est caché et reste fixe si le système demande moins d'animations.
 - Les projets sont des cartes. Un clic ouvre la fiche dans un panneau (`<dialog>`) qui glisse depuis la droite. Chaque fiche a sa propre adresse (`#portail`, `#echecs`…) et le bouton retour du navigateur la referme.
 

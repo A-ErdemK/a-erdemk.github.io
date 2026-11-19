@@ -42,6 +42,7 @@
     <symbol id="i-back" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
     <symbol id="i-in" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 10.5v6M8 7.6v.1M11.5 16.5v-3.4c0-1.6 1-2.6 2.4-2.6s2.1 1 2.1 2.6v3.4M11.5 10.5v6"/></symbol>
     <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4 1.3-4-2-5.5-2.5M14.5 21v-3.2c0-1 .1-1.5-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6.2 0C6.1 3.1 5.1 3.4 5.1 3.4a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 3.7 9.8c0 4.6 2.7 5.7 5.5 6-.6.5-.6 1.2-.5 2V21"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5Z"/><path d="M14 3.5v5h5M9 13h6M9 16.5h4"/></symbol>
     <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m4 7.5 8 6 8-6"/></symbol>
   </svg>
 
@@ -74,6 +75,7 @@
         <p class="ticket__when" data-stage-dates>Dès le 15 février 2027, 16 semaines minimum</p>
         <div class="ticket__actions">
           <a class="btn btn--primary" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage"><svg aria-hidden="true"><use href="#i-mail"/></svg>M'écrire</a>
+          <a class="btn" href="assets/cv-erdem-kurac.pdf" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-doc"/></svg>Mon CV</a>
           <a class="btn" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me"><svg aria-hidden="true"><use href="#i-in"/></svg>LinkedIn</a>
         </div>
       </div>
@@ -91,7 +93,7 @@
         </div>
       </div>
       <ul class="grid" data-grid>
-        <li class="grid__item grid__item--wide" data-cats="donnees"><a class="card" href="#pipeline" data-project="pipeline"><span class="card__visual"><span class="viz viz--branches" aria-hidden="true"><code>feat/parser-xps</code><code>feat/parser-raman</code><code>feat/visualisation</code></span></span><span class="card__body"><span class="card__tags"><span class="tag tag--live"><span class="live" aria-hidden="true"></span>En cours</span></span><span class="card__title">Desktop Data Pipeline</span><span class="card__text">L'application de bureau de notre SAE : des mesures de labo transformées en courbes.</span><span class="card__stack">Python, PyQt6, SQLAlchemy</span></span></a></li>
+        <li class="grid__item grid__item--wide" data-cats="donnees"><a class="card" href="#pipeline" data-project="pipeline"><span class="card__visual"><span class="viz viz--branches" aria-hidden="true"><code>feat/parser-xps</code><code>feat/parser-raman</code><code>feat/visualisation</code></span></span><span class="card__body"><span class="card__tags"><span class="tag tag--live"><span class="live" aria-hidden="true"></span>En cours</span></span><span class="card__title">Desktop Data Pipeline</span><span class="card__text">L'application de bureau de notre SAE : des mesures de labo transformées en courbes.</span><span class="card__stack">Python, PyQt6, PostgreSQL</span></span></a></li>
         <li class="grid__item" data-cats="web securite"><a class="card" href="#portail" data-project="portail"><span class="card__visual"><img src="assets/img/portail-infra.webp" width="1200" height="637" alt="" decoding="async"></span><span class="card__body"><span class="card__tags"><span class="tag">Stage</span><span class="tag tag--demo">Démo</span></span><span class="card__title">Portail Infra</span><span class="card__text">Les comptes techniques d'un hôpital, rangés et protégés.</span><span class="card__stack">Vue 3, Flask, LDAP</span></span></a></li>
         <li class="grid__item" data-cats="securite"><a class="card" href="#echecs" data-project="echecs"><span class="card__visual"><img class="is-center" src="assets/img/echecs.webp" width="900" height="897" alt="" decoding="async"></span><span class="card__body"><span class="card__tags"><span class="tag">SAE</span><span class="tag tag--demo">Démo</span></span><span class="card__title">Échecs en réseau</span><span class="card__text">Une partie en ligne où chaque coup passe chiffré.</span><span class="card__stack">Python, sockets, AES-GCM</span></span></a></li>
         <li class="grid__item" data-cats="devops"><a class="card" href="#cicd" data-project="cicd"><span class="card__visual"><span class="viz viz--ci" aria-hidden="true"><i></i><i></i><i></i><i class="w"></i><i class="w"></i><i class="w"></i></span></span><span class="card__body"><span class="card__tags"><span class="tag">Module</span><span class="tag tag--demo">Démo</span></span><span class="card__title">Chaîne CI/CD</span><span class="card__text">Chaque modification testée, scannée, puis déployée.</span><span class="card__stack">GitHub Actions, Docker</span></span></a></li>
@@ -99,6 +101,7 @@
         <li class="grid__item" data-cats="web"><a class="card" href="#prestige" data-project="prestige"><span class="card__visual"><img src="assets/img/prestige-auto.webp" width="1200" height="758" alt="" decoding="async"></span><span class="card__body"><span class="card__tags"><span class="tag">Module</span></span><span class="card__title">Prestige Auto</span><span class="card__text">Un catalogue de voitures en JavaScript pur.</span><span class="card__stack">JavaScript, Rollup</span></span></a></li>
         <li class="grid__item" data-cats="donnees"><a class="card" href="#bot" data-project="bot"><span class="card__visual"><svg class="viz viz--spark" data-spark viewBox="0 0 320 180" preserveAspectRatio="none" aria-hidden="true"></svg></span><span class="card__body"><span class="card__tags"><span class="tag">Perso</span></span><span class="card__title">Robot de trading</span><span class="card__text">301 trades simulés sur des données de 2022 à 2026.</span><span class="card__stack">MQL5, Python</span></span></a></li>
       </ul>
+      <p class="projects__more"><b>Aussi en BUT :</b> une application web d'assurance (Python et MySQL, calcul de vétusté, rapports PDF) et une application mobile Flutter reliée à une base graphe Neo4j par une API Flask.</p>
       <p class="projects__hint">Cliquez sur une carte pour ouvrir le projet. Celles qui portent <span class="tag tag--demo">Démo</span> s'essaient directement ici.</p>
       <p class="sr-only" data-filter-status aria-live="polite"></p>
     </section>
@@ -107,18 +110,30 @@
       <h2 id="parcours-titre">Parcours</h2>
       <div class="path__grid">
         <ol class="timeline">
+          <li><p class="timeline__date">2021 à 2024</p><p class="timeline__what">Bac général, mention Bien (maths et physique), lycée Durzy à Villemandeur</p></li>
           <li><p class="timeline__date">2024 à 2027</p><p class="timeline__what">BUT Informatique, IUT d'Orléans</p></li>
-          <li><p class="timeline__date">Avril à juin 2026</p><p class="timeline__what">Stage de développeur au Centre Hospitalier de Gien</p></li>
+          <li><p class="timeline__date">Avril à juin 2026</p><p class="timeline__what">Stage de développeur en autonomie au Centre Hospitalier de Gien</p></li>
+          <li><p class="timeline__date">Juin à août 2026</p><p class="timeline__what">Conducteur de ligne de conditionnement chez Louis Lemoine, à La Selle-sur-le-Bied</p></li>
           <li class="timeline__next"><p class="timeline__date">Février 2027, 16 semaines</p><p class="timeline__what">Stage de fin d'études, peut-être chez vous</p></li>
         </ol>
         <dl class="skills">
-          <div><dt>Langages</dt><dd>Python, Java, C, C++, C#, JavaScript, TypeScript, Dart, SQL, Rust.</dd></div>
+          <div><dt>Langages</dt><dd>Python, Java, C, C++, C#, JavaScript, TypeScript, PHP, Dart, SQL, Rust.</dd></div>
           <div><dt>Back-end</dt><dd>Flask, Django et .NET, pour des API REST avec connexion JWT ou LDAP.</dd></div>
-          <div><dt>Interfaces</dt><dd>Vue 3, React, HTML et CSS. Flutter pour le mobile, PyQt6 pour le bureau.</dd></div>
-          <div><dt>Données</dt><dd>MySQL, PostgreSQL, Oracle, SQLite et Neo4j.</dd></div>
+          <div><dt>Interfaces</dt><dd>Vue 3, React, Tailwind CSS, HTML et CSS. Flutter pour le mobile, PyQt6 pour le bureau.</dd></div>
+          <div><dt>Données</dt><dd>MySQL, PostgreSQL, Oracle et PL/SQL, SQLite, Neo4j. Analyse avec pandas, NumPy et Matplotlib.</dd></div>
           <div><dt>Sécurité</dt><dd>Chiffrement AES, échange de clés ECDH, mots de passe hachés, journal d'audit.</dd></div>
-          <div><dt>Outils</dt><dd>Git en équipe, Docker, GitHub Actions, tests automatisés, Linux.</dd></div>
+          <div><dt>Outils</dt><dd>Git en équipe, Docker, GitHub Actions, tests automatisés, Active Directory, Linux et Windows.</dd></div>
         </dl>
+      </div>
+      <div class="hobby">
+        <div class="tacho" data-tacho>
+          <svg viewBox="0 0 240 188" role="img" aria-label="Compte-tours, de 0 à 8 000 tours par minute" data-tacho-svg></svg>
+        </div>
+        <div class="hobby__text">
+          <h3 class="hobby__title">Hors du code</h3>
+          <p>Passionné de mécanique et d'automobile : le sujet de Prestige Auto tombait bien. J'analyse aussi les marchés financiers, d'où le robot de trading.</p>
+          <button class="btn hobby__rev" type="button" data-rev>Maintenir pour accélérer</button>
+        </div>
       </div>
     </section>
 
@@ -128,6 +143,7 @@
       <div class="contact__actions">
         <a class="btn btn--primary" href="mailto:kuracerdem@gmail.com?subject=Proposition%20de%20stage"><svg aria-hidden="true"><use href="#i-mail"/></svg>kuracerdem@gmail.com</a>
         <button class="btn" type="button" data-copy="kuracerdem@gmail.com">Copier l'adresse</button>
+        <a class="btn" href="assets/cv-erdem-kurac.pdf" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-doc"/></svg>Mon CV</a>
         <a class="btn" href="https://www.linkedin.com/in/erdem-kurac-22b245388/" rel="me"><svg aria-hidden="true"><use href="#i-in"/></svg>LinkedIn</a>
         <a class="btn" href="https://github.com/A-ErdemK" rel="me"><svg aria-hidden="true"><use href="#i-gh"/></svg>GitHub</a>
       </div>
@@ -153,12 +169,12 @@
         </div>
         <div class="detail__body">
           <div class="detail__text">
-            <p class="app__pitch">Notre SAE de 3e année : une application de bureau qui importe les mesures de trois appareils de laboratoire (XPS, Raman et électrochimie), les range en base et les affiche en courbes.</p>
+            <p class="app__pitch">Notre SAE de 3e année : une application de bureau qui importe les mesures de trois appareils de laboratoire (XPS, Raman et électrochimie), les range dans une base PostgreSQL et les affiche en courbes.</p>
             <ul class="app__points">
               <li>Interface PyQt6, lecture des fichiers avec Pandas, base gérée par SQLAlchemy et Alembic.</li>
               <li>Rôles, journal des actions, et exécutables pour Windows, macOS et Linux.</li>
             </ul>
-            <p class="app__stack">Python, PyQt6, Pandas, SQLAlchemy, PyInstaller</p>
+            <p class="app__stack">Python, PyQt6, Pandas, PostgreSQL, SQLAlchemy, PyInstaller</p>
           </div>
           <div class="branches">
             <p class="branches__title">Quelques branches du chantier</p>
@@ -176,17 +192,17 @@
       <article id="portail" class="detail" data-detail aria-labelledby="portail-titre" hidden>
         <div class="detail__title">
           <span class="app__icon ico--portail" aria-hidden="true"><svg><use href="#i-key"/></svg></span>
-          <div><h2 id="portail-titre" tabindex="-1">Portail Infra</h2><p class="detail__ctx">Stage au Centre Hospitalier de Gien, avril à juin 2026</p></div>
+          <div><h2 id="portail-titre" tabindex="-1">Portail Infra</h2><p class="detail__ctx">Stage en autonomie au Centre Hospitalier de Gien, avril à juin 2026</p></div>
         </div>
         <div class="detail__body">
           <div class="detail__text">
             <p class="app__pitch">Pendant mon stage, j'ai développé l'application interne qui range les comptes techniques des serveurs par service. Chacun ne voit que ce que son rôle autorise, et chaque action sensible est enregistrée.</p>
             <ul class="app__points">
-              <li>Connexion avec l'annuaire LDAP de l'hôpital, et une base locale de secours.</li>
+              <li>Connexion par l'Active Directory de l'hôpital (LDAP), droits selon le rôle, et une base locale de secours.</li>
               <li>Mots de passe chiffrés en AES-256, affichés seulement à la demande et tracés dans un journal d'audit.</li>
               <li>API Flask testée, interface en Vue 3, lancement avec Docker Compose.</li>
             </ul>
-            <p class="app__stack">Vue 3, Flask, MySQL, OpenLDAP, JWT, Docker</p>
+            <p class="app__stack">Vue 3, Tailwind CSS, Flask, MySQL, Active Directory, JWT, Docker</p>
           </div>
           <div class="demo demo--portail">
             <div class="demo__head">
