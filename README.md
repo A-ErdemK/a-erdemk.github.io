@@ -1,6 +1,6 @@
 # a-erdemk.github.io
 
-Mon portfolio, prévu sur https://a-erdemk.github.io.
+Mon portfolio, en ligne sur https://a-erdemk.github.io.
 
 Site statique fait main (HTML, CSS, JavaScript, sans framework ni étape de build), pour GitHub Pages. Il marche aussi en ouvrant `index.html` directement depuis le disque.
 
