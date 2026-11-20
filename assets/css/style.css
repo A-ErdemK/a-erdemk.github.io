@@ -116,6 +116,8 @@ p { text-wrap: pretty; }
 
 .intro { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: end; max-width: calc(var(--wrap) + 2 * var(--pad)); margin: 0 auto; padding: clamp(28px, 6vh, 64px) var(--pad) clamp(28px, 4vh, 44px); }
 .intro h1 { font: 600 clamp(2rem, 3.4vw, 2.75rem)/1.1 var(--display); letter-spacing: -0.02em; }
+.intro__id { display: flex; align-items: center; gap: clamp(14px, 2vw, 20px); }
+.avatar { width: clamp(64px, 6vw, 84px); height: auto; aspect-ratio: 1; flex: none; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent); }
 .intro__role { margin-top: 14px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 500; }
 .intro__lead { max-width: 36rem; margin-top: 8px; color: var(--ink-2); font-size: 1.0625rem; }
 .intro, .intro > * { animation: monte 500ms ease-out both; }
